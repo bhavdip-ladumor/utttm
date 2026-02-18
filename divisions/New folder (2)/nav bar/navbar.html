@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bottom Navigation</title>
+    <link rel="stylesheet" href="navbar.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Main Content Placeholder -->
+
+
+<!-- Bottom Navigation -->
+<section class="bottom-nav">
+    <button class="nav-btn" onclick="goHome()">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </button>
+
+    <button class="nav-btn" onclick="searchPage()">
+        <i class="fas fa-search"></i>
+        <span>Search</span>
+    </button>
+
+    <button class="nav-btn" onclick="openCollection()">
+        <i class="fas fa-layer-group"></i>
+        <span>Collection</span>
+    </button>
+
+    <button class="nav-btn" onclick="openCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Cart</span>
+        <div class="cart-count" id="cartCount">0</div>
+    </button>
+</section>
+
+<script src="navbar.js"></script>
+</body>
+</html>

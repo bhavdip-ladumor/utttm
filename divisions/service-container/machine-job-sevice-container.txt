@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine and job works</title>
+</head>
+<body>
+    <div class="services-container">
+
+    <div class="grid">
+        <div class="card">
+            <a href="plastic-manufacturing.html" class="main-link">Plastic Manufacturing</a>
+            <i class="fas fa-industry main-icon"></i>
+            <div class="card-content">
+                <h3>Plastic Manufacturing</h3>
+                <p>High-volume production specializing in <b>Injection, Blow, and Extruder technology</b> for custom parts and industrial components.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <a href="3d-printing.html" class="main-link">3D Printing Services</a>
+            <i class="fas fa-cube main-icon"></i>
+            <div class="card-content">
+                <h3>3D Printing & Prototyping</h3>
+                <p>Precision 3D printing for <b>College Projects, Industrial Prototypes,</b> and custom personalized models.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <a href="job-works.html" class="main-link">Custom Job Works</a>
+            <i class="fas fa-tools main-icon"></i>
+            <div class="card-content">
+                <h3>Custom Machine Job Works</h3>
+                <p>Laser cutting, CNC engraving, and specialized technical job works tailored to your specific project requirements.</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

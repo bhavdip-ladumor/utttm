@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreativeWeb</title>
+    <link rel="stylesheet" href="web1.css">
+    <link rel="stylesheet" href="nav bar/navbar.css">
+    <link rel="stylesheet" href="./main-content/main.css">
+</head>
+<body>
+
+<!-- Header Include -->
+<div id="header"></div>
+
+<!-- Main Content (Empty for Now) -->
+<div id="mainContent"></div>
+
+<!-- Bottom Navbar Include -->
+<div id="navbar"></div>
+
+<!-- Footer Include -->
+<!-- <div id="footer"></div> -->
+
+
+<main class="main-content">
+        <div class="shop-container">
+            <div class="top-bar">
+                <input type="text" id="searchInput" placeholder="Search 1000+ products...">
+                <div id="categoryTabs" class="tabs"></div>
+            </div>
+
+            <div id="productWrapper" class="product-grid"></div>
+        </div>
+        </main>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <img id="modalImg" style="width:100%; height:auto;">
+            <h2 id="modalTitle"></h2>
+            <p id="modalPrice"></p>
+            <button class="add-to-cart-btn">Add to Cart</button>
+        </div>
+    </div>
+
+
+<script src="nav bar/navbar.js"></script>
+<script src="web1.js"></script>
+
+<div id="mainContent"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const res = await fetch('main.html');
+  const html = await res.text();
+  document.getElementById("mainContent").innerHTML = html;
+});
+</script>
+
+<script src="js file/data.js"></script>
+<script src="js file/app.js"></script>
+<script src="js file/main.js"></script>
+<script src="js file/productStore.js"></script>
+<script src="js file/uiRenderer.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+/* Container for the live results */
+.live-search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    z-index: 2000;
+    
+    /* Horizontal Layout Logic */
+    display: none; 
+    flex-direction: row;
+    overflow-x: auto; /* Enable side scrolling */
+    padding: 10px;
+    gap: 15px;
+    white-space: nowrap; /* Prevents items from wrapping to next line */
+}
+
+/* Individual Product Item in the horizontal line */
+.live-item {
+    display: inline-flex;
+    flex-direction: column; /* Image on top, text below */
+    align-items: center;
+    min-width: 120px; /* Fixed width for each item */
+    max-width: 120px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    text-align: center;
+}
+
+.live-item:hover {
+    transform: translateY(-3px);
+}
+
+.live-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 8px;
+    border: 1px solid #eee;
+}
+
+.live-item-info h4 {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #333;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds "..." if name is too long */
+    white-space: nowrap;
+}
+
+.live-item-info p {
+    margin: 2px 0 0;
+    font-size: 0.85rem;
+    color: #27ae60;
+    font-weight: bold;
+}
+
+/* Custom scrollbar for a cleaner look */
+.live-search-dropdown::-webkit-scrollbar {
+    height: 6px;
+}
+.live-search-dropdown::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
