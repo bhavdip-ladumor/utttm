@@ -1,0 +1,185 @@
+/* Header Styles */
+.resin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.brand-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #00d4ff; /* Resin Theme Color */
+    letter-spacing: 1px;
+}
+
+.menu-btn, .cart-icon {
+    font-size: 1.2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+}
+
+/* Grid Layout Fix for Main Content */
+.resin-grid {
+    padding: 20px;
+    padding-bottom: 100px; /* Space for sticky bar */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+}
+
+
+
+
+
+/* ----------Header css------------------------------------ */
+/* ----------Header css------------------------------------ */
+/* ----------Header css------------------------------------ */
+
+/* Header Styles */
+.resin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.brand-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #00d4ff; /* Resin Theme Color */
+    letter-spacing: 1px;
+}
+
+.menu-btn, .cart-icon {
+    font-size: 1.2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+}
+
+/* Grid Layout Fix for Main Content */
+.resin-grid {
+    padding: 20px;
+    padding-bottom: 100px; /* Space for sticky bar */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+}
+
+/* cart placement    */
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: #ff4757; /* Red color */
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: bold;
+    display: none; /* Hidden by default, JS will show it */
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+/* 1. SHARE BUTTON - Top Right of Card */
+.cart-btn-sm {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 2. CARD INFO - Description Area */
+.card-info {
+    padding: 12px;
+    text-align: left;
+}
+
+/* 3. ROW 1: VIEW DETAILS (Full Width) */
+.buy-btn-sm {
+    display: block;
+    width: calc(100% - 20px); /* Margin safety */
+    margin: 0 auto 10px auto;
+    padding: 12px;
+    background: #f1f2f6;
+    color: #2f3542;
+    border: 1px solid #dfe4ea;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* 4. ACTIONS CONTAINER */
+.card-actions {
+    display: flex;
+    flex-direction: column; /* Stacks Row 1 above Row 2 */
+    width: 100%;
+}
+
+/* 5. ROW 2: BOTTOM BUTTONS (Add to Cart & WP Half-Half) */
+.bottom-button-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Exact 50/50 split */
+    width: 100%;
+}
+
+.action-btn {
+    border: none;
+    padding: 15px 5px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+/* Colors */
+.cart-btn {
+    background-color: #0984e3; /* Blue */
+    color: white;
+}
+
+.wp-btn {
+    background-color: #25D366; /* WhatsApp Green */
+    color: white;
+}
+
+/* Hover/Touch Effect */
+.action-btn:active {
+    filter: brightness(0.8);
+}
+
+
+
