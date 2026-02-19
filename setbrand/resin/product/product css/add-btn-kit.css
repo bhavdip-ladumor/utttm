@@ -1,0 +1,249 @@
+.action-buttons-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.add-to-cart-btn {
+    padding: 14px;
+    border-radius: 10px;
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.add-to-cart-btn:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+}
+
+.buy-now-btn {
+    padding: 14px;
+    border-radius: 10px;
+    background: var(--whatsapp-green);
+    color: white;
+    border: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-transform: capitalize;
+}
+
+.buy-now-btn:hover {
+    background: #21b358;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.kit-promo-box {
+    background: #fffdf0; 
+    border: 2px dashed #f1c40f; 
+    padding: 15px;
+    border-radius: 12px;
+    margin: 18px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.2s ease;
+}
+
+.kit-promo-box:hover {
+    transform: scale(1.01); 
+}
+
+.kit-header {
+    color: #d4ac0d; 
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.kit-promo-box p {
+    font-size: 0.85rem;
+    color: #555;
+    margin: 2px 0;
+    line-height: 1.4;
+}
+
+.add-kit-btn {
+    background: #f1c40f;
+    color: #333;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 5px;
+    box-shadow: 0 2px 6px rgba(241, 196, 15, 0.2);
+}
+
+.add-kit-btn:hover {
+    background: #d4ac0d;
+}
+
+
+
+
+/* PART 5: KIT MODAL & ROW LOGIC */
+
+
+.modal-overlay {
+    position: fixed;
+    top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.8);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+}
+
+.kit-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 95%;
+    max-width: 450px;
+}
+
+.close-modal {
+    float: right;
+    border: none;
+    background: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+
+
+#kit-items-list::-webkit-scrollbar {
+    display: none;
+}
+
+
+
+/* =========================================
+   PART 5: KIT MODAL & ROW LOGIC (UPDATED)
+   ========================================= */
+
+#kit-items-list {
+    display: flex;
+    align-items: flex-start; /* Aligns plus signs and images at the top */
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 20px 0;
+    overflow-x: auto;
+    scrollbar-width: none; /* Hides scrollbar on Firefox */
+}
+
+#kit-items-list::-webkit-scrollbar {
+    display: none; /* Hides scrollbar on Chrome/Safari */
+}
+
+.kit-item-card {
+    display: flex;
+    flex-direction: column; /* FORCES TEXT BELOW IMAGE */
+    align-items: center;    /* CENTERS EVERYTHING */
+    text-align: center;
+    min-width: 100px;
+}
+
+.kit-item-img-small {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    margin-bottom: 8px; /* Gap between image and name */
+}
+
+.kit-item-info-block {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.kit-item-name-small {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.2;
+    height: 34px; /* Fixes height so prices align */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.kit-item-prices-small {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.kit-plus-sign {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ccc;
+    padding-top: 25px; /* Centers the plus sign with the images */
+}
+
+
+.kit-sale {
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+.kit-mrp {
+    color: #bbb;
+    text-decoration: line-through;
+    font-size: 0.65rem;
+}
+
+
+
+.price-summary {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.summary-line.highlight {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--error-red);
+    margin-top: 5px;
+}
+
+.save-tag {
+    font-size: 0.75rem;
+    color: var(--accent-color);
+    font-weight: 700;
+    text-align: right;
+}
+
