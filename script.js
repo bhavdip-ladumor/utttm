@@ -155,6 +155,18 @@ window.addEventListener('DOMContentLoaded', () => {
     syncSideMenu();
     injectGlobalComponents();
 
+    // --- ADD THIS PART BELOW ---
+    // If the URL has a product ID (e.g., product.html?id=RC-VIN-11), inject the schema
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    if (productId && typeof window.getProductById === 'function') {
+        const product = window.getProductById(productId);
+        if (product) {
+            injectProductSchema(product);
+        }
+    }
+    // ---------------------------
+
     // Setup input listener for root search bar if it exists
     const rootSearch = document.getElementById('main-search');
     if (rootSearch) {
@@ -166,3 +178,39 @@ window.addEventListener('DOMContentLoaded', () => {
         loadProducts();
     }
 });
+
+
+
+// --- NEW: Function to inject Product Data for Google ---
+function injectProductSchema(product) {
+    if (!product) return;
+
+    // Remove existing schema if any
+    const existing = document.getElementById('dynamic-product-schema');
+    if (existing) existing.remove();
+
+    const schema = {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": product.name,
+        "image": product.images[0].startsWith('http') ? product.images[0] : "https://uttamhub.com/" + product.images[0],
+        "description": product.description,
+        "sku": product.sku,
+        "brand": { "@type": "Brand", "name": product.brand },
+        "offers": {
+            "@type": "Offer",
+            "url": window.location.href,
+            "priceCurrency": "INR",
+            "price": product.sale,
+            "availability": product.stock === "instock" || parseInt(product.stock) > 0 
+                            ? "https://schema.org/InStock" 
+                            : "https://schema.org/OutOfStock"
+        }
+    };
+
+    const script = document.createElement('script');
+    script.id = 'dynamic-product-schema';
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schema);
+    document.head.appendChild(script);
+}
