@@ -214,3 +214,35 @@ function injectProductSchema(product) {
     script.text = JSON.stringify(schema);
     document.head.appendChild(script);
 }
+
+
+/** --- 6. DASHBOARD ROOM LOGIC --- **/
+window.openRoom = function(roomId) {
+    const overlay = document.getElementById('room-overlay');
+    const targetRoom = document.getElementById(roomId);
+    
+    if (overlay && targetRoom) {
+        overlay.classList.remove('hidden');
+        
+        // Hide all rooms safely
+        document.querySelectorAll('.room-content').forEach(room => {
+            room.classList.add('hidden');
+        });
+        
+        targetRoom.classList.remove('hidden');
+        // Prevent body scrolling when room is open (Good for TV/Mobile)
+        document.body.style.overflow = 'hidden';
+    }
+};
+
+window.closeRoom = function() {
+    const overlay = document.getElementById('room-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+        document.body.style.overflow = 'auto'; // Re-enable scrolling
+    }
+};
+
+let currentSlideIndex = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
