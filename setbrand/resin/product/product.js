@@ -128,7 +128,70 @@ function renderSidebarCategories() {
 
 /**
  * 2. STATIC UI RENDERING (Titles, Brand, Images)
+ * 
  */
+
+/**
+ * SWIPE ENGINE
+ * Detects left/right swipes on the main image
+ */
+let touchStartX = 0;
+let touchEndX = 0;
+
+function initSwipe() {
+    const mainImgContainer = document.querySelector('.main-image-container');
+    if (!mainImgContainer) return;
+
+    mainImgContainer.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    mainImgContainer.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+}
+
+function handleSwipe() {
+    const threshold = 50; // Minimum distance to register as a swipe
+    const images = selectedVariant.images;
+    if (!images || images.length <= 1) return;
+
+    // Find current image index
+    const mainImg = document.getElementById('main-display-img');
+    const currentIndex = images.indexOf(mainImg.getAttribute('src'));
+
+    let nextIndex;
+    if (touchStartX - touchEndX > threshold) {
+        // Swiped Left -> Show Next Image
+        nextIndex = (currentIndex + 1) % images.length;
+        triggerImageUpdate(nextIndex);
+    } else if (touchEndX - touchStartX > threshold) {
+        // Swiped Right -> Show Previous Image
+        nextIndex = (currentIndex - 1 + images.length) % images.length;
+        triggerImageUpdate(nextIndex);
+    }
+}
+
+function triggerImageUpdate(index) {
+    const images = selectedVariant.images;
+    const thumbList = document.querySelectorAll('#thumb-list img');
+    
+    // Update main image
+    const mainImg = document.getElementById('main-display-img');
+    mainImg.src = images[index];
+
+    // Update active class on thumbnails
+    thumbList.forEach((img, i) => {
+        if (i === index) {
+            img.classList.add('active');
+            // Scroll thumbnail into view automatically
+            img.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+            img.classList.remove('active');
+        }
+    });
+}
 function renderStaticUI() {
     // 1. Update Text Content
     document.title = `${selectedVariant.name} | Resin Cosmos`;
@@ -151,6 +214,7 @@ function renderStaticUI() {
                  alt="Thumbnail for ${selectedVariant.name}">
         `).join('');
     }
+    initSwipe();
 }
 
 /**
