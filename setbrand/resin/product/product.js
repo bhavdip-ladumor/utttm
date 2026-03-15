@@ -142,6 +142,7 @@ function renderSidebarCategories() {
 let touchStartX = 0;
 let touchEndX = 0;
 let isSwipeListenerAttached = false;
+let currentImageIndex = 0;
 
 function initSwipe() {
     const mainImgContainer = document.querySelector('.main-image-container');
@@ -159,47 +160,50 @@ function initSwipe() {
     isSwipeListenerAttached = true;
 }
 
+/**
+ * FIXED: handleSwipe
+ * Robust detection for Localhost (127.0.0.1) and Uttamhub
+ */
 function handleSwipe() {
-    const threshold = 40; // Slightly lower threshold for better sensitivity
+    const threshold = 40; 
     const images = selectedVariant.images;
     if (!images || images.length <= 1) return;
 
-    const mainImg = document.getElementById('main-display-img');
-    const currentSrc = mainImg.getAttribute('src'); // Use getAttribute to get the exact string
-
-    // Find index by checking which array string is contained in the current SRC
-    let currentIndex = images.findIndex(img => img === currentSrc);
-
-    // Reset touch positions immediately to prevent "double swipe" bugs
     const diff = touchStartX - touchEndX;
-    touchStartX = 0; 
+    
+    // Reset coordinates immediately
+    touchStartX = 0;
     touchEndX = 0;
 
     if (Math.abs(diff) < threshold) return;
 
-    let nextIndex;
     if (diff > 0) {
-        // Swiped Left -> Next
-        nextIndex = (currentIndex + 1) % images.length;
+        // Swiped Left -> Next (using our tracker)
+        currentImageIndex = (currentImageIndex + 1) % images.length;
     } else {
-        // Swiped Right -> Previous
-        nextIndex = (currentIndex - 1 + images.length) % images.length;
+        // Swiped Right -> Previous (using our tracker)
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
     }
     
-    triggerImageUpdate(nextIndex);
+    triggerImageUpdate(currentImageIndex);
 }
 
+/**
+ * FIXED: Image Trigger
+ * Ensures thumbnails and main image are perfectly synced
+ */
 function triggerImageUpdate(index) {
     const images = selectedVariant.images;
     const mainImg = document.getElementById('main-display-img');
     const thumbImgs = document.querySelectorAll('#thumb-list img');
 
-    if (!images[index]) return;
+    if (!images || !images[index]) return;
+
+    // Update our tracker
+    currentImageIndex = index;
 
     // Update the image
     mainImg.src = images[index];
-    // Crucial: Update the attribute so the next swipe can find it
-    mainImg.setAttribute('src', images[index]);
 
     // Update Thumbnails UI
     thumbImgs.forEach((img, i) => {
@@ -213,8 +217,13 @@ function triggerImageUpdate(index) {
 }
 
 // Fix: Ensure manual clicks also update the attribute
+// Update this to sync the tracker when a thumbnail is clicked
 function updateMainImg(el, src) {
-    const index = selectedVariant.images.indexOf(src);
+    const images = selectedVariant.images;
+    // Even if URLs are same, we find the specific thumbnail index clicked
+    const thumbImgs = Array.from(document.querySelectorAll('#thumb-list img'));
+    const index = thumbImgs.indexOf(el); 
+
     if (index !== -1) {
         triggerImageUpdate(index);
     }
@@ -224,6 +233,7 @@ function updateMainImg(el, src) {
  * 3. UI RENDERING
  */
 function renderStaticUI() {
+    currentImageIndex = 0; // Reset to first image
     // 1. Update Text Content
     document.title = `${selectedVariant.name} | Resin Cosmos`;
     document.getElementById('product-name').innerText = selectedVariant.name;
