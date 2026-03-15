@@ -2,197 +2,177 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details - Uttamhub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Product Details | Resin Cosmos</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="product css/add-btn-kit.css">
-    <link rel="stylesheet" href="product css/core-header.css">
-    <link rel="stylesheet" href="product css/des-similar.css">
-    <link rel="stylesheet" href="product css/responsive.css">
-    <link rel="stylesheet" href="product css/main-image-thum-img.css">
-    <link rel="stylesheet" href="product css/product-detail-varient.css">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="../../../shopcart.css">
+    <link rel="stylesheet" href="product.css">
 
-    <style>
-        /* --- Search Bar & Cart CSS --- */
-        .glass-header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 10px 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .header-inner {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .search-bar {
-            flex: 1;
-            position: relative;
-            background: #f1f1f1;
-            border-radius: 8px;
-            padding: 8px 12px;
-            display: flex;
-            align-items: center;
-        }
-        .search-bar input {
-            background: transparent;
-            border: none;
-            outline: none;
-            width: 100%;
-            margin-left: 8px;
-            font-size: 0.9rem;
-        }
-        .search-results-overlay {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border-radius: 0 0 12px 12px;
-            max-height: 350px;
-            overflow-y: auto;
-            z-index: 9999;
-            display: none;
-        }
-        .cart-pill {
-            position: relative;
-            background: #222;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 50px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        #cart-count {
-            background: #d63031;
-            font-size: 0.7rem;
-            min-width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        @keyframes cartBounce {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); background: var(--gold); }
-    100% { transform: scale(1); }
-}
-
-.cart-bounce {
-    animation: cartBounce 0.4s ease-in-out;
-}
-    </style>
+    <link rel="preconnect" href="https://raw.githubusercontent.com">
 </head>
+
 <body>
 
-    <div id="cart-placeholder"></div>
-
-    <header class="glass-header">
-        <div class="header-inner">
-            <div class="back-btn" onclick="history.back()"><i class="fas fa-chevron-left"></i></div>
-            
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" id="productSearch" placeholder="Search resin products...">
-                <div id="searchResults" class="search-results-overlay"></div>
+    <div id="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading Resin Cosmos...</p>
+</div>
+    <header class="main-header">
+    
+    <div class="nav-row">
+        <div class="nav-left">
+            <button class="back-btn" onclick="history.back()" aria-label="Go Back">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <a href="../resincosmos.html" class="brand-logo">Resin Cosmos</a>
+        </div>
+        
+        <!-- <div class="nav-center">
+            <div class="profile-circle" onclick="window.location.href='profile.html'">
+                <img src="https://ui-avatars.com/api/?name=User&background=000&color=fff" alt="User Profile">
             </div>
+        </div> -->
 
+        <div class="nav-right">
             <div class="cart-pill" onclick="toggleCart()">
                 <i class="fas fa-shopping-bag"></i>
                 <span id="cart-count">0</span>
             </div>
         </div>
-    </header>
+    </div>
 
-    <main class="product-container">
-        <nav class="breadcrumb" id="breadcrumb"></nav>
+    <div class="search-row">
+        <div class="search-wrapper">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="productSearch" placeholder="Search for resin, molds, or colors...">
+            <div id="searchResults" class="search-dropdown"></div>
+        </div>
+    </div>
+</header>
 
-        <section class="main-info">
-            <div class="image-gallery">
-                <div class="main-img-holder">
-                    <img id="main-display-img" src="" alt="Product Image">
-                </div>
-                <div class="thumb-list" id="thumb-list"></div>
-            </div>
+<nav class="product-nav">
+    <div class="nav-left-box">
+        <button class="menu-trigger" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
 
-            <div class="details-pane">
-                <div class="brand-line" id="product-brand"></div>
-                <h1 class="product-title" id="product-name">Loading...</h1>
-                
-                <div class="price-box">
-                    <span class="sale-price" id="product-sale"></span>
-                    <span class="mrp-price" id="product-mrp"></span>
-                    <span class="discount-percent" id="product-discount"></span>
-                </div>
+    <div class="nav-center-box">
+        <a href="https://uttamhub.com" class="uttam-pill-btn" target="_blank">
+            Visit other stores on uttamhub
+        </a>
+    </div>
 
-                <div class="delivery-note">
-                    <i class="fas fa-truck"></i> Free Delivery on this item
-                </div>
+    <div class="nav-right-box">
+        <a class="home-link" href="../resincosmos.html">
+            <i class="fas fa-home"></i>
+        </a>
+    </div>
+</nav>
 
-                <div id="attributes-container" class="attr-group"></div>
+<div id="sidebar-menu" class="sidebar">
+    <div class="sidebar-header">
+        <h3>Categories</h3>
+        <button class="close-btn" onclick="toggleSidebar()">&times;</button>
+    </div>
+    <div id="sidebar-content">
+        </div>
+</div>
 
-                <div class="action-buttons-group">
-                    <button class="add-to-cart-btn" onclick="handleAddToCart()">
-                        <i class="fas fa-shopping-basket"></i> Add to Cart
-                    </button>
-                    <button class="buy-now-btn" onclick="handleWhatsAppOrder()">
-                        <i class="fab fa-whatsapp"></i> Inquiry on WhatsApp
-                    </button>
-                </div>
-            </div>
-        </section>
+<!-- <div id="sidebar-overlay" onclick="toggleSidebar()"></div> -->
 
-        <section id="kit-section" class="kit-promo-box" style="display: none;">
-            <div class="kit-header">
-                <i class="fas fa-box-open"></i>
-                <span>STARTER KIT AVAILABLE</span>
-            </div>
-            <p>Includes everything required for this project.</p>
-            <button class="add-kit-btn" onclick="openKitModal(currentProduct.id)">
-                Check Kit Items & Save
-            </button> 
-        </section>
+<section class="product-gallery">
+    <div class="main-image-container">
+        <button id="img-share-btn" class="img-share-btn" title="Share Product">
+            <i class="fas fa-share-alt"></i>
+        </button>
 
-        <section class="description-section">
-            <h3>Product Description</h3>
-            <p id="product-description"></p>
-            <div id="other-details" class="technical-specs"></div>
-        </section>
+        <img id="main-display-img" src="placeholder.jpg" alt="Active Product Image">
+        <span id="image-discount-badge" class="img-badge"></span>
+    </div>
 
-        <section class="similar-products-container">
-            <div class="section-header">
-                <h3>Similar Products</h3>
-                <p>Customers also bought</p>
-            </div>
-            <div id="similar-products-grid" class="resin-grid"></div>
-        </section>
-    </main>
+    <div class="thumbnail-wrapper">
+        <div id="thumb-list" class="thumb-scroll-container"></div>
+    </div>
+</section>
 
-    <div id="kit-modal" class="modal-overlay" style="display:none;">
-        <div class="kit-modal-content">
-            <div class="modal-header">
-                <h3>Complete the Set</h3>
-                <button onclick="closeModal()" class="close-modal">&times;</button>
-            </div>
-            <div id="kit-items-list"></div> 
-            <div id="modal-footer-logic"></div>
+<section class="product-details">
+    <div class="brand-badge" id="product-brand">Loading...</div>
+    <h1 class="product-title" id="product-name">Product Name</h1>
+    <div class="product-tagline" id="product-tagline"></div>
+    <div class="price-row">
+        
+        <span class="sale-price" id="product-sale">₹0</span>
+        <span class="mrp-price" id="product-mrp">₹0</span>
+        <span class="discount-percent" id="detail-discount"></span>
+        <div id="stock-status" class="stock-status-container"></div>
+    </div>
+
+<div class="variant-section">
+    <div id="variant-chips" class="chip-container"></div>
+</div>
+
+    <div class="delivery-info">
+        <div class="info-item" id="free-delivery-tag" style="display: none;">
+            <i class="fas fa-truck"></i>
+            <span>Free Delivery Available</span>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>Quality Assured</span>
         </div>
     </div>
 
+    <div class="cta-buttons">
+    <button class="btn-cart" onclick="addToCartSilent(selectedVariant.sku)">
+        <i class="fas fa-shopping-bag"></i> Add to Cart
+    </button>
+    <button class="btn-whatsapp" id="whatsapp-inquiry">
+        <i class="fab fa-whatsapp"></i> Inquiry
+    </button>
+</div>
+<div class="product-info-wrapper">
+    <div class="info-section">
+        <h3 class="info-title">Description</h3>
+        <p id="product-description" class="description-text"></p>
+    </div>
+
+<div id="other-details-section" class="info-section">
+    <h3 class="info-title">Highlights</h3>
+    <div class="collapsible-wrapper" id="wrapper-highlights">
+        <div id="other-details-list" class="details-list"></div>
+        <div class="fade-overlay"></div>
+    </div>
+    <button class="mini-toggle-btn" onclick="toggleSection('highlights')">Show All</button>
+</div>
+
+<div class="info-section">
+    <h3 class="info-title">Product Specifications</h3>
+    <div class="collapsible-wrapper" id="wrapper-specs">
+        <div id="product-specs" class="specs-grid"></div> <div class="fade-overlay"></div>
+    </div>
+    <button class="mini-toggle-btn" onclick="toggleSection('specs')">Show All</button>
+</div>
+</div>
+</section>
+
+<section class="similar-products">
+    <div class="container">
+        <h2 class="section-title">You May Also Like</h2>
+        <div id="similar-grid" class="similar-grid">
+            </div>
+    </div>
+</section>
+
+
+
+<div id="other-categories-area"></div>
+
     <script src="../../../database.js"></script>
     <script src="../../../cart.js"></script>
-    <script src="product.js"></script> 
+    <script src="product.js"></script>
 </body>
 </html>
