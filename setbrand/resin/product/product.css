@@ -435,23 +435,36 @@ nav for btns
 }
 
 /* Main Display Image Container */
+/* Ensure the container doesn't scroll horizontally, only the swipe logic handles it */
 .main-image-container {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    background: #f9f9f9;
-    border-radius: 15px;
-    overflow: hidden;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
+    touch-action: pan-y; /* Allows vertical scrolling of page, but intercepts horizontal */
 }
 
-.main-image-container img {
+/* Smooth fade for the image change */
+#main-display-img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Optional: Add a "visual hint" for TV/Desktop users */
+.main-image-container::after {
+    content: 'swipe';
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 10px;
+    color: rgba(0,0,0,0.2);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+    .main-image-container::after { display: none; } /* Hide hint on Desktop */
 }
 
 /* Floating Discount Badge */
