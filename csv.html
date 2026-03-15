@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Uttamhub | Smart CSV Converter</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        h2 { margin-top: 0; color: #60a5fa; }
+        textarea { width: 100%; height: 180px; background: #000; color: #10b981; border: 1px solid #334155; border-radius: 8px; padding: 12px; font-family: monospace; margin-bottom: 10px; resize: vertical; }
+        .btn-group { display: flex; gap: 10px; margin: 10px 0 20px 0; }
+        button { padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-fetch { background: #8b5cf6; color: white; }
+        .btn-convert { background: var(--primary); color: white; flex: 1; }
+        .btn-copy { background: #475569; color: white; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        p { font-size: 0.9rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>Uttamhub CSV Converter</h2>
+        <p>Paste your **CSV Data** OR your **Google Sheets Link** below:</p>
+        
+        <textarea id="csvInput" placeholder="Paste data here..."></textarea>
+
+        <div class="btn-group">
+            <button class="btn-fetch" onclick="fetchFromUrl()">Fetch from Link</button>
+            <button class="btn-convert" onclick="processCSV()">Generate database.js</button>
+            <button class="btn-copy" onclick="copyCode()">Copy Code</button>
+        </div>
+
+        <p>Resulting Output (Flat Structure):</p>
+        <textarea id="output" readonly placeholder="Resulting code will appear here..."></textarea>
+    </div>
+</div>
+
+<script>
+    async function fetchFromUrl() {
+        const url = document.getElementById('csvInput').value.trim();
+        if (!url.startsWith('http')) return alert("Please paste a valid URL first.");
+        
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            document.getElementById('csvInput').value = text; 
+            alert("Data loaded successfully! Now click 'Generate'.");
+        } catch (error) {
+            alert("Error fetching data. Make sure your Google Sheet is 'Published to the Web' as a CSV.");
+        }
+    }
+
+    function processCSV() {
+        const input = document.getElementById('csvInput').value.trim();
+        if(!input) return alert("Please provide CSV data.");
+
+        const rows = input.split('\n');
+        
+        // Mapping based on your provided header order
+        const col = {
+            id: 0, sku: 1, name: 2, cat: 3, sub: 4,
+            hsn: 5, gst: 6, weight: 7, 
+            length: 8, widthDim: 9, height: 10,
+            date: 11, active: 12,
+            tagweb: 13, brand: 14, attrN: 15, attrV: 16,
+            tagline: 17, desc: 18, other: 19,
+            mrp: 20, sale: 21, stock: 22, min: 23,
+            isKit: 24, kitN: 25, kitC: 26, key: 27, trend: 28,
+            isFreeDeli: 29, deliTime: 30,
+            imgStart: 31, imgEnd: 40, vid: 41
+        };
+
+        const result = rows.slice(1).map(row => {
+            // Robust CSV splitting to handle quoted commas
+            const data = row.split(/[,;](?=(?:(?:[^"]*"){2})*[^"]*$)/).map(item => 
+                item.trim().replace(/^"|"$/g, '').replace(/""/g, '"')
+            );
+
+            if (data.length < 3) return null; // Skip empty rows
+
+            // Process Image Array
+            const imgs = [];
+            for (let j = col.imgStart; j <= col.imgEnd; j++) { 
+                if (data[j] && data[j].trim() !== "") imgs.push(data[j].trim()); 
+            }
+
+            // FLAT MAPPING (Simplified)
+            return {
+                "id": data[col.id] || "",
+                "sku": data[col.sku] || "",
+                "name": data[col.name] || "",
+                "category": data[col.cat] || "",
+                "subcategory": data[col.sub] || "",
+                "hsn": data[col.hsn] || "",
+                "tax_rate": data[col.gst] || "0",
+                "weight": data[col.weight] || "0",
+                "length": data[col.length] || "",
+                "width": data[col.widthDim] || "",
+                "height": data[col.height] || "",
+                "dateAdded": data[col.date] || "",
+                "isActive": data[col.active] || "TRUE",
+                "tagweb": data[col.tagweb] || "",
+                "brand": data[col.brand] || "",
+                "attrName": data[col.attrN] || "N/A",
+                "attrValue": data[col.attrV] || "N/A",
+                "tagline": data[col.tagline] || "",
+                "description": data[col.desc] || "",
+                "otherDetails": data[col.other] || "",
+                "mrp": data[col.mrp] || "0",
+                "sale": data[col.sale] || "0",
+                "stock": data[col.stock] || "0",
+                "minOrder": data[col.min] || "1",
+                "isKit": data[col.isKit] || "FALSE",
+                "kitName": data[col.kitN] || "",
+                "kitComponents": data[col.kitC] || "",
+                "keyword": data[col.key] || "",
+                "trending": data[col.trend] || "FALSE",
+                "freeDelivery": data[col.isFreeDeli] || "",
+                "deliveryTime": data[col.deliTime] || "",
+                "images": imgs,
+                "vid": data[col.vid] || ""
+            };
+        }).filter(p => p !== null);
+
+        const finalCode = `window.allProducts = ${JSON.stringify(result, null, 2)};\n\nwindow.dispatchEvent(new Event('db_ready'));`;
+        document.getElementById('output').value = finalCode;
+    }
+
+    function copyCode() {
+        const output = document.getElementById('output');
+        output.select();
+        document.execCommand('copy');
+        alert("Code copied to clipboard! You can now paste this into your database.js file.");
+    }
+</script>
+</body>
+</html>
