@@ -135,12 +135,17 @@ function renderSidebarCategories() {
  * SWIPE ENGINE
  * Detects left/right swipes on the main image
  */
+/**
+ * 1. SWIPE ENGINE
+ * Detects left/right swipes on the main image
+ */
 let touchStartX = 0;
 let touchEndX = 0;
+let isSwipeListenerAttached = false;
 
 function initSwipe() {
     const mainImgContainer = document.querySelector('.main-image-container');
-    if (!mainImgContainer) return;
+    if (!mainImgContainer || isSwipeListenerAttached) return;
 
     mainImgContainer.addEventListener('touchstart', e => {
         touchStartX = e.changedTouches[0].screenX;
@@ -150,63 +155,90 @@ function initSwipe() {
         touchEndX = e.changedTouches[0].screenX;
         handleSwipe();
     }, { passive: true });
+
+    isSwipeListenerAttached = true;
 }
 
 function handleSwipe() {
-    const threshold = 50; // Minimum distance to register as a swipe
+    const threshold = 40; // Slightly lower threshold for better sensitivity
     const images = selectedVariant.images;
     if (!images || images.length <= 1) return;
 
-    // Find current image index
     const mainImg = document.getElementById('main-display-img');
-    const currentIndex = images.indexOf(mainImg.getAttribute('src'));
+    const currentSrc = mainImg.getAttribute('src'); // Use getAttribute to get the exact string
+
+    // Find index by checking which array string is contained in the current SRC
+    let currentIndex = images.findIndex(img => img === currentSrc);
+
+    // Reset touch positions immediately to prevent "double swipe" bugs
+    const diff = touchStartX - touchEndX;
+    touchStartX = 0; 
+    touchEndX = 0;
+
+    if (Math.abs(diff) < threshold) return;
 
     let nextIndex;
-    if (touchStartX - touchEndX > threshold) {
-        // Swiped Left -> Show Next Image
+    if (diff > 0) {
+        // Swiped Left -> Next
         nextIndex = (currentIndex + 1) % images.length;
-        triggerImageUpdate(nextIndex);
-    } else if (touchEndX - touchStartX > threshold) {
-        // Swiped Right -> Show Previous Image
+    } else {
+        // Swiped Right -> Previous
         nextIndex = (currentIndex - 1 + images.length) % images.length;
-        triggerImageUpdate(nextIndex);
     }
+    
+    triggerImageUpdate(nextIndex);
 }
 
 function triggerImageUpdate(index) {
     const images = selectedVariant.images;
-    const thumbList = document.querySelectorAll('#thumb-list img');
-    
-    // Update main image
     const mainImg = document.getElementById('main-display-img');
-    mainImg.src = images[index];
+    const thumbImgs = document.querySelectorAll('#thumb-list img');
 
-    // Update active class on thumbnails
-    thumbList.forEach((img, i) => {
+    if (!images[index]) return;
+
+    // Update the image
+    mainImg.src = images[index];
+    // Crucial: Update the attribute so the next swipe can find it
+    mainImg.setAttribute('src', images[index]);
+
+    // Update Thumbnails UI
+    thumbImgs.forEach((img, i) => {
         if (i === index) {
             img.classList.add('active');
-            // Scroll thumbnail into view automatically
             img.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         } else {
             img.classList.remove('active');
         }
     });
 }
+
+// Fix: Ensure manual clicks also update the attribute
+function updateMainImg(el, src) {
+    const index = selectedVariant.images.indexOf(src);
+    if (index !== -1) {
+        triggerImageUpdate(index);
+    }
+}
+
+/**
+ * 3. UI RENDERING
+ */
 function renderStaticUI() {
     // 1. Update Text Content
     document.title = `${selectedVariant.name} | Resin Cosmos`;
     document.getElementById('product-name').innerText = selectedVariant.name;
     document.getElementById('product-brand').innerText = `By ${selectedVariant.brand || 'Resin Cosmos'}`;
     document.getElementById('product-tagline').innerText = selectedVariant.tagline || "";
+
     // 2. Update Gallery Images
     const mainImg = document.getElementById('main-display-img');
     const thumbList = document.getElementById('thumb-list');
 
     if (selectedVariant.images && selectedVariant.images.length > 0) {
-        // Set the first image of the NEW variant as the main image
+        // Set first image
         mainImg.src = selectedVariant.images[0];
 
-        // Rebuild the thumbnail list for the NEW variant
+        // Rebuild thumbnails
         thumbList.innerHTML = selectedVariant.images.map((img, idx) => `
             <img src="${img}" 
                  class="${idx === 0 ? 'active' : ''}" 
@@ -214,6 +246,8 @@ function renderStaticUI() {
                  alt="Thumbnail for ${selectedVariant.name}">
         `).join('');
     }
+
+    // Initialize swipe engine (Fix: only runs if not already attached)
     initSwipe();
 }
 
