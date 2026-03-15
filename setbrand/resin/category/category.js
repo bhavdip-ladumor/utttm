@@ -1,6 +1,6 @@
 /* ==========================================================
    UTTAMHUB CATEGORY ENGINE (category.js)
-   Features: Unique ID Search, Grouped Variants, Cart Integration
+   Updated for New Flat Database Structure
    ========================================================== */
 
 // --- 1. GLOBAL VARIABLES & PARAMS ---
@@ -10,14 +10,12 @@ const mustHave = params.get('mustHave')?.toLowerCase().trim();
 
 // --- 2. INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
-    initCategorySearch();
-    // If DB is already loaded by another script
+    if (typeof initCategorySearch === "function") initCategorySearch();
     if (window.allProducts && window.allProducts.length > 0) {
         renderCategory();
     }
 });
 
-// Listen for the database custom event
 window.addEventListener('db_ready', () => { 
     renderCategory(); 
 });
@@ -28,7 +26,6 @@ function renderCategory() {
     const titleEl = document.getElementById('category-title') || document.getElementById('cat-title');
     const grid = document.getElementById('product-grid') || document.getElementById('category-grid');
     
-    // Set the Page Title
     if (titleEl) {
         if (filterType === 'raw' && mustHave === 'resin') {
             titleEl.innerText = "RESIN RAW MATERIALS";
@@ -39,7 +36,11 @@ function renderCategory() {
 
     // A. FILTERING LOGIC
     const filteredRaw = products.filter(item => {
-        const cleanSplit = (str) => str ? str.toLowerCase().split(',').map(s => s.trim()) : [];
+        // Handle string-based "TRUE"/"FALSE" from Google Sheets CSV
+        if (item.isActive === "FALSE" || item.isActive === false) return false;
+
+        const cleanSplit = (str) => str ? String(str).toLowerCase().split(',').map(s => s.trim()) : [];
+        
         const categories = cleanSplit(item.category);
         const subcategories = cleanSplit(item.subcategory);
         const tags = cleanSplit(item.tagweb);
@@ -47,18 +48,17 @@ function renderCategory() {
 
         const allMetadata = [...categories, ...subcategories, ...tags, ...keywords];
 
-        // Requirement 1: Must be resin related
+        // Requirement: Must be resin related by default
         const isResinRelated = allMetadata.includes('resin');
         if (!isResinRelated) return false;
 
-        // Requirement 2 & 3: Match URL Parameters
         const matchesType = !filterType || allMetadata.includes(filterType);
         const matchesMustHave = !mustHave || allMetadata.includes(mustHave);
 
         return matchesType && matchesMustHave;
     });
 
-    // B. GROUPING LOGIC (Unique ID Filter to prevent repeats)
+    // B. GROUPING LOGIC (Group variants by ID)
     const grouped = {};
     filteredRaw.forEach(item => {
         if (!grouped[item.id]) {
@@ -66,11 +66,11 @@ function renderCategory() {
         }
         grouped[item.id].variants.push({
             sku: item.sku,
-            mrp: item.mrp,
-            sale: item.sale,
+            mrp: parseFloat(item.mrp) || 0,
+            sale: parseFloat(item.sale) || 0,
+            stock: parseInt(item.stock) || 0,
             attrName: item.attrName,
-            attrValue: item.attrValue,
-            stock: item.stock
+            attrValue: item.attrValue
         });
     });
 
@@ -85,46 +85,86 @@ function renderCategory() {
 
     // C. HTML GENERATION
     grid.innerHTML = finalItems.map(product => {
-        // Collect variant text
-        const availableOptions = product.variants.map(v => {
-            if(!v.attrValue) return "Standard";
-            const vals = v.attrValue.split(',');
-            return vals[vals.length - 1].replace(/_/g, ' ').trim();
-        }).join(' | ');
+        const hasMultipleVariants = product.variants && product.variants.length > 1;
+        const optionLabel = hasMultipleVariants ? 
+            `<div class="variant-tag">Options Available</div>` : '';
 
-        // Price Range calculation
-        const sales = product.variants.map(v => parseInt(v.sale) || 0);
-        const minPrice = Math.min(...sales);
-        const maxPrice = Math.max(...sales);
-        const priceDisplay = minPrice === maxPrice ? `₹${minPrice}` : `₹${minPrice} - ₹${maxPrice}`;
+        // Flat Price Access
+        const displayPrice = `₹${product.sale || 0}`;
         
-        const isOutOfStock = product.variants.every(v => String(v.stock).toLowerCase() !== 'instock');
+        // Stock Logic (Checks if any variant is in stock)
+        const isOutOfStock = product.variants.every(v => v.stock <= 0);
+        const nameDisplay = isOutOfStock ? 
+            `<span style="color: #d9534f; font-weight: 800;">[SOLD OUT]</span> ${product.name}` : 
+            product.name;
+
+        // Free Delivery Badge Logic (Flat property check)
+        const deliveryBadge = (product.freeDelivery === "TRUE" || product.freeDelivery === true) ? 
+            `<span class="free-delivery-badge"><i class="fas fa-truck"></i> Free Delivery</span>` : '';
+
+        const wpMessage = encodeURIComponent(`Hi Resin Cosmos! I'm inquiring about: ${product.name} (ID: ${product.id}). Is this available?`);
+        const wpLink = `https://wa.me/919724362981?text=${wpMessage}`;
 
         return `
             <div class="shop-card">
-                <div class="card-img-wrap" onclick="window.location.href='../product/product.html?id=${product.id}'" style="cursor:pointer">
-                    <img src="${product.images[0]}" loading="lazy" alt="${product.name}">
-                    ${isOutOfStock ? '<span class="sold-out">Sold Out</span>' : ''}
+                <div class="card-img-wrap" onclick="window.location.href='../product/product.html?id=${product.id}'">
+                    <img src="${product.images ? product.images[0] : ''}" loading="lazy" alt="${product.name}">
+                    ${deliveryBadge}
                 </div>
                 <div class="card-info">
-                    <h5 onclick="window.location.href='../product/product.html?id=${product.id}'" style="cursor:pointer">${product.name}</h5>
+                    <h5 onclick="window.location.href='../product/product.html?id=${product.id}'">
+                        ${nameDisplay}
+                    </h5>
                     <p class="brand-name">${product.brand || 'Resin Cosmos'}</p>
-                    <div class="variant-strip">
-                        <small>Available: ${availableOptions}</small>
+                    
+                    ${optionLabel}
+
+                    <div class="price-box">
+                        <span class="sale">${displayPrice}</span>
+                        ${parseFloat(product.mrp) > parseFloat(product.sale) ? 
+                            `<span class="mrp" style="text-decoration:line-through; font-size:0.8rem; color:#888; margin-left:8px;">₹${product.mrp}</span>` : ''}
                     </div>
-                    <div class="price-row" style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-                        <span class="sale" style="font-weight:bold; color:var(--primary);">${priceDisplay}</span>
-                        <button class="add-btn" onclick="addToCart('${product.id}')" style="background:var(--dark); color:white; border:none; width:30px; height:30px; border-radius:6px; cursor:pointer;">
-                            <i class="fas fa-plus"></i>
+                    
+                    <div class="card-buttons">
+                        <button class="action-btn add-cart-btn" onclick="addToCartSilent('${product.id}')" ${isOutOfStock ? 'disabled' : ''}>
+                            <i class="fas fa-shopping-cart"></i> Add
                         </button>
+                        <a href="${wpLink}" target="_blank" class="action-btn wp-btn">
+                            <i class="fab fa-whatsapp"></i> Inquiry
+                        </a>
                     </div>
                 </div>
             </div>
         `;
     }).join('');
 }
+/**
+ * 4. SILENT ADD TO CART
+ */
+window.addToCartSilent = function(id) {
+    if (typeof addToCart === "function") {
+        addToCart(id); 
+        
+        const selectors = ['.sidebar', '.cart-sidebar', '#cart-sidebar', '.sidebar-overlay', '#cart-overlay', '.cart-active'];
+        const forceClose = () => {
+            selectors.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    el.classList.remove('active', 'open');
+                    if (selector.includes('overlay')) el.style.display = 'none'; 
+                });
+            });
+        };
 
-// --- 4. UNIQUE SEARCH LOGIC (No Repetition) ---
+        forceClose();
+        setTimeout(forceClose, 50);
+        setTimeout(forceClose, 150);
+    } else {
+        console.error("addToCart function not found.");
+    }
+};
+
+// --- 5. UNIQUE SEARCH LOGIC ---
 function initCategorySearch() {
     const input = document.getElementById('productSearch');
     const resultsContainer = document.getElementById('searchResults');
@@ -141,6 +181,7 @@ function initCategorySearch() {
         const uniqueMatches = new Map();
 
         window.allProducts.forEach(p => {
+            if (p.isActive === false) return; // Skip hidden items
             const name = p.name ? p.name.toLowerCase() : "";
             const idMatch = p.id ? String(p.id).toLowerCase() : "";
             
@@ -163,11 +204,11 @@ function renderSearchResults(matches) {
         container.innerHTML = `<div class="search-item" style="padding:15px; color:#999;">No results found</div>`;
     } else {
         container.innerHTML = matches.map(p => `
-            <div class="search-item" onclick="window.location.href='../product/product.html?id=${p.id}'" style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid #eee; cursor:pointer;">
+            <div class="search-item" onclick="window.location.href='../product/product.html?id=${p.id}'">
                 <img src="${p.images[0]}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
                 <div>
                     <div style="font-weight:600; font-size:0.85rem;">${p.name}</div>
-                    <div style="font-size:0.75rem; color:#666;">₹${p.sale}</div>
+                    <div style="font-size:0.75rem; color:#666;">₹${p.pricing?.sale || 0}</div>
                 </div>
             </div>
         `).join('');
