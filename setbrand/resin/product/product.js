@@ -1,360 +1,625 @@
 /**
- * PRODUCT PAGE ENGINE - product.js
- * Location: root/setbrand/resin/product/
+ * PRODUCT PAGE ENGINE - Full Version
+ * Handles: URL ID lookup, Multi-Attribute Selection, Image Gallery, and Search.
  */
 
-let currentProduct = null;
-let allVariants = [];
-
-// --- 1. INITIALIZATION ---
+let productVariants = []; // All SKUs sharing the same product ID
+let selectedVariant = null; // The specific SKU currently active
+let currentSelections = {}; // Current attribute state, e.g., { Width: "4_mm", Size: "8_inch" }
 
 async function initProductPage() {
     const params = new URLSearchParams(window.location.search);
     const productId = params.get('id');
-    const skuId = params.get('sku');
 
     if (!productId) {
         window.location.href = '../resincosmos.html';
         return;
     }
 
-    // Wait for database.js to populate window.allProducts
+    // Initialize the search bar in the header
+    initGlobalSearch();
+
+    // Check if database is already loaded, otherwise wait for it
     if (window.allProducts && window.allProducts.length > 0) {
-        renderProductDetails(productId, skuId);
+        setupProductData(productId);
     } else {
-        window.addEventListener('db_ready', () => {
-            renderProductDetails(productId, skuId);
-        });
-        
-        // Polling fallback
-        const checkDB = setInterval(() => {
-            if (window.allProducts && window.allProducts.length > 0) {
-                renderProductDetails(productId, skuId);
-                clearInterval(checkDB);
-            }
-        }, 100);
+        window.addEventListener('db_ready', () => setupProductData(productId));
     }
 }
 
-// --- 2. CORE RENDERING ---
-
-function renderProductDetails(id, skuId) {
-    // Filter variants belonging to this product ID
-    allVariants = window.allProducts.filter(p => String(p.id) === String(id));
+/**
+ * 1. DATA SETUP
+ */
+/**
+ * 1. DATA SETUP
+ */
+function setupProductData(id) {
+    // Show Loading state (Optional: already visible via HTML)
+    const loader = document.getElementById('loading-overlay');
     
-    if (allVariants.length === 0) {
+    // 1. ADD THIS: Check the URL for existing variant selections first
+    parseVariantFromURL();
+
+    // Find all variants for this ID
+    productVariants = window.allProducts.filter(p => String(p.id) === String(id));
+
+    if (productVariants.length === 0) {
+        if (loader) loader.style.display = 'none'; // Hide loader if error
         document.body.innerHTML = `
-            <div style="text-align:center; padding:100px;">
+            <div style="text-align:center; padding:100px; font-family:sans-serif;">
                 <h2>Product Not Found</h2>
-                <a href="../resincosmos.html">Back to Home</a>
+                <a href="../resincosmos.html" style="color:#000;">Return to Shop</a>
             </div>`;
         return;
     }
 
-    // Select variant based on SKU or default to first one
-    currentProduct = skuId ? allVariants.find(v => String(v.sku) === String(skuId)) : allVariants[0];
-    if (!currentProduct) currentProduct = allVariants[0];
+// 2. MODIFIED: Only set default if URL didn't already set selections
+    if (Object.keys(currentSelections).length === 0) {
+        selectedVariant = productVariants[0];
+        const names = (selectedVariant.attrName || "").split(',').map(s => s.trim());
+        const values = (selectedVariant.attrValue || "").split(',').map(s => s.trim());
+        names.forEach((name, i) => {
+            if (name) currentSelections[name] = values[i];
+        });
+    } else {
+        // Find the variant that matches the URL params
+        const match = productVariants.find(v => {
+            const vKeys = v.attrName.split(',').map(s => s.trim());
+            const vVals = v.attrValue.split(',').map(s => s.trim());
+            return vKeys.every((k, i) => currentSelections[k] === vVals[i]);
+        });
+        selectedVariant = match || productVariants[0];
+    }
 
-    updateMainProductUI();
-    renderVariants(); 
-    checkKitStatus();
+    // --- TRIGGER THE UI ENGINE ---
+    renderStaticUI();
+    renderVariantSelectors();
+    updateVariantSpecificUI();
+    renderSimilarProducts();
+    autoRenderOtherCategories(); 
+    renderSidebarCategories();
+    
+    // 3. ADD THIS: Initialize the share button listener
+    initShareButton();
 
-    // Deferred tasks for performance
-    setTimeout(() => {
-        renderSimilarByTag(currentProduct.tagweb, currentProduct.id);
-        renderBreadcrumbs();
-    }, 50);
+    // --- FINISHED ---
+    // Hide the loader with a smooth fade
+    if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+            loader.style.display = 'none';
+        }, 500);
+    }
 }
 
-function updateMainProductUI() {
-    document.title = `${currentProduct.name} | Resin Cosmos`;
+// 1. Sidebar Toggle Logic
+function toggleSidebar() {
+    document.getElementById('sidebar-menu').classList.toggle('active');
+    document.getElementById('sidebar-overlay').classList.toggle('active');
+}
 
-    const setElementText = (elId, text) => {
-        const el = document.getElementById(elId);
-        if (el) el.innerText = text;
-    };
 
-    setElementText('product-brand', `By ${currentProduct.brand || 'Resin Cosmos'}`);
-    setElementText('product-name', currentProduct.name);
-    setElementText('product-description', currentProduct.description);
-    setElementText('product-sale', `₹${currentProduct.sale}`);
-    setElementText('product-mrp', `₹${currentProduct.mrp}`);
+
+// 3. Inject Categories into Sidebar (Run this inside setupProductData)
+function renderSidebarCategories() {
+    const container = document.getElementById('sidebar-content');
+    if (!container || !window.allProducts) return;
+
+    // Grouping logic for Sidebar
+    const categories = [...new Set(window.allProducts.map(p => p.category))];
     
-    // Discount Calculation
-    const discElement = document.getElementById('product-discount');
-    if (discElement) {
-        const s = parseFloat(currentProduct.sale);
-        const m = parseFloat(currentProduct.mrp);
-        if (m > s) {
-            const disc = Math.round(((m - s) / m) * 100);
-            discElement.innerText = `${disc}% OFF`;
-            discElement.style.display = 'inline';
-        } else {
-            discElement.style.display = 'none';
-        }
-    }
+    container.innerHTML = categories.map(cat => {
+        const subs = [...new Set(window.allProducts
+            .filter(p => p.category === cat)
+            .map(p => p.subcategory))];
 
-    // Images
+        return `
+            <div class="sidebar-cat-item">
+                <span class="sidebar-cat-title">${cat}</span>
+                <ul class="sidebar-sub-list">
+                    ${subs.map(sub => `
+                        <li><a href="shop.html?category=${cat}&sub=${sub}">${sub}</a></li>
+                    `).join('')}
+                </ul>
+            </div>
+        `;
+    }).join('');
+}
+
+/**
+ * 2. STATIC UI RENDERING (Titles, Brand, Images)
+ */
+function renderStaticUI() {
+    // 1. Update Text Content
+    document.title = `${selectedVariant.name} | Resin Cosmos`;
+    document.getElementById('product-name').innerText = selectedVariant.name;
+    document.getElementById('product-brand').innerText = `By ${selectedVariant.brand || 'Resin Cosmos'}`;
+    document.getElementById('product-tagline').innerText = selectedVariant.tagline || "";
+    // 2. Update Gallery Images
     const mainImg = document.getElementById('main-display-img');
-    if(mainImg && currentProduct.images && currentProduct.images.length > 0) {
-        mainImg.src = currentProduct.images[0];
-    }
-    
     const thumbList = document.getElementById('thumb-list');
-    if(thumbList && currentProduct.images) {
-        thumbList.innerHTML = currentProduct.images.map((img, idx) => `
-            <img src="${img}" class="${idx === 0 ? 'active' : ''}" 
-                 onclick="changeMainImage(this, '${img}')" 
-                 onerror="this.style.display='none'">
+
+    if (selectedVariant.images && selectedVariant.images.length > 0) {
+        // Set the first image of the NEW variant as the main image
+        mainImg.src = selectedVariant.images[0];
+
+        // Rebuild the thumbnail list for the NEW variant
+        thumbList.innerHTML = selectedVariant.images.map((img, idx) => `
+            <img src="${img}" 
+                 class="${idx === 0 ? 'active' : ''}" 
+                 onclick="updateMainImg(this, '${img}')"
+                 alt="Thumbnail for ${selectedVariant.name}">
         `).join('');
     }
 }
 
-// --- 3. VARIANT SYSTEM ---
+/**
+ * 3. DYNAMIC VARIANT SELECTORS (Width, Size, etc.)
+ */
+function renderVariantSelectors() {
+    const container = document.getElementById('variant-chips');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    const attrKeys = selectedVariant.attrName.split(',').map(s => s.trim());
 
-function renderVariants() {
-    const container = document.getElementById('attributes-container');
-    if (!container || !currentProduct.attrName) return;
+    if (productVariants.length <= 1) {
+        document.querySelector('.variant-section').style.display = 'none';
+        return;
+    }
 
-    const attrNames = currentProduct.attrName.split(',').map(s => s.trim());
-    const currentValues = currentProduct.attrValue.split(',').map(s => s.trim());
+    attrKeys.forEach(key => {
+        const row = document.createElement('div');
+        row.className = 'variant-row';
 
-    let html = "";
-    attrNames.forEach((name, index) => {
-        const options = [...new Set(allVariants.map(v => {
-            const vals = v.attrValue.split(',').map(s => s.trim());
-            return vals[index];
-        }))].filter(Boolean);
+        const label = document.createElement('p');
+        label.className = 'variant-label';
+        label.innerText = `SELECT ${key.toUpperCase()}:`;
+        row.appendChild(label);
 
-        html += `<div class="attr-group">
-                    <h4>Select ${name.replace(/_/g, ' ')}:</h4>
-                    <div class="pill-flex">`;
+        const group = document.createElement('div');
+        group.className = 'chip-group';
 
-        options.forEach(opt => {
-            const isAvailable = checkAvailability(index, opt, currentValues);
-            const isActive = opt === currentValues[index] ? 'active-pill' : '';
-            const isDisabled = !isAvailable ? 'disabled-pill' : '';
+        const uniqueValues = [...new Set(productVariants.map(v => {
+            const vKeys = v.attrName.split(',').map(s => s.trim());
+            const vVals = v.attrValue.split(',').map(s => s.trim());
+            return vVals[vKeys.indexOf(key)];
+        }))];
+
+        uniqueValues.forEach(val => {
+            const isActive = currentSelections[key] === val;
             
-            html += `<span class="attr-pill ${isActive} ${isDisabled}" 
-                        ${isAvailable ? `onclick="selectDynamicAttr(${index}, '${opt}')"` : ''}>
-                        ${opt.replace(/_/g, ' ')}
-                     </span>`;
+            // --- CHECK IF THIS COMBINATION EXISTS ---
+            const wouldBeSelections = { ...currentSelections, [key]: val };
+            const exists = productVariants.some(v => {
+                const vKeys = v.attrName.split(',').map(s => s.trim());
+                const vVals = v.attrValue.split(',').map(s => s.trim());
+                return vKeys.every((k, i) => wouldBeSelections[k] === vVals[i]);
+            });
+
+            const chip = document.createElement('div');
+            // If it doesn't exist, add the 'disabled' class
+            chip.className = `variant-chip ${isActive ? 'active' : ''} ${!exists ? 'disabled' : ''}`;
+            chip.innerText = val.replace(/_/g, ' '); 
+            
+            if (exists) {
+                chip.onclick = () => handleAttributeClick(key, val);
+            }
+            
+            group.appendChild(chip);
         });
-        html += `</div></div>`;
-    });
-    container.innerHTML = html;
-}
 
-function checkAvailability(targetIndex, optionToTest, currentSelectedValues) {
-    return allVariants.some(v => {
-        const vVals = v.attrValue.split(',').map(s => s.trim());
-        for (let i = 0; i < targetIndex; i++) {
-            if (vVals[i] !== currentSelectedValues[i]) return false;
-        }
-        return vVals[targetIndex] === optionToTest;
+        row.appendChild(group);
+        container.appendChild(row);
     });
 }
 
-function selectDynamicAttr(index, newValue) {
-    const targetValues = currentProduct.attrValue.split(',').map(s => s.trim());
-    targetValues[index] = newValue;
+function handleAttributeClick(key, value) {
+    currentSelections[key] = value;
 
-    const match = allVariants.find(v => {
+    const match = productVariants.find(v => {
+        const vKeys = v.attrName.split(',').map(s => s.trim());
         const vVals = v.attrValue.split(',').map(s => s.trim());
-        for(let i = 0; i <= index; i++) {
-            if(vVals[i] !== targetValues[i]) return false;
-        }
-        return true;
-    }) || allVariants.find(v => v.attrValue.split(',')[index].trim() === newValue);
+        return vKeys.every((k, i) => currentSelections[k] === vVals[i]);
+    });
 
     if (match) {
-        const newUrl = `product.html?id=${match.id}&sku=${match.sku}`;
-        window.history.replaceState(null, '', newUrl);
-        renderProductDetails(match.id, match.sku);
+        selectedVariant = match;
+        
+        // --- NEW URL SYNC LOGIC ---
+        // This adds &variant=Size:8_inch,Width:4_mm to the URL without reloading
+        const variantSlug = Object.entries(currentSelections)
+            .map(([k, v]) => `${k}:${v}`)
+            .join(',');
+        const newUrl = `${window.location.origin}${window.location.pathname}?id=${selectedVariant.id}&variant=${encodeURIComponent(variantSlug)}`;
+        window.history.replaceState({ path: newUrl }, '', newUrl);
+        // --------------------------
+
+        renderStaticUI(); 
+        renderVariantSelectors();
+        updateVariantSpecificUI();
     }
 }
-
-// --- 4. KIT & CART LOGIC ---
-
-function handleAddToCart() {
-    if (typeof addToCart === 'function' && currentProduct) {
-        // 1. Add to database/storage
-        addToCart(currentProduct.id, currentProduct);
-        
-        // 2. Visual Feedback (Glow/Bounce the cart icon instead of opening)
-        const cartPill = document.querySelector('.cart-pill');
-        if (cartPill) {
-            cartPill.classList.add('cart-bounce');
-            setTimeout(() => cartPill.classList.remove('cart-bounce'), 400);
-        }
-    }
-}
-
-function checkKitStatus() {
-    const kitBox = document.getElementById('kit-section');
-    if (!kitBox) return;
-
-    const isKit = currentProduct.kitComponents && currentProduct.kitComponents.length > 0;
-    kitBox.style.display = isKit ? 'flex' : 'none';
-}
-
-function openKitModal(productId) {
-    const product = window.allProducts.find(p => String(p.id) === String(productId));
-    if (!product || !product.kitComponents) return;
-
-    const modal = document.getElementById('kit-modal');
-    const kitContent = document.getElementById('kit-items-list');
-    const footerLogic = document.getElementById('modal-footer-logic');
-    
-    const rawIds = product.kitComponents.split(',').map(id => id.trim());
-    const components = window.allProducts.filter(p => rawIds.includes(String(p.id)));
-
-    let totalMRP = 0, totalSell = 0;
-
-    kitContent.innerHTML = components.map((item, index) => {
-        totalMRP += Number(item.mrp) || 0;
-        totalSell += Number(item.sale) || 0;
-        return `
-            <div class="kit-item-card">
-                <img src="${item.images[0]}" class="kit-item-img-small">
-                <div class="kit-item-details-stack">
-                    <span class="kit-item-name-small">${item.name}</span>
-                    <div class="kit-item-prices-small">
-                        <span class="kit-sale">₹${item.sale}</span>
-                        <span class="kit-mrp">₹${item.mrp}</span>
-                    </div>
-                </div>
-            </div>` + (index < components.length - 1 ? '<div class="kit-plus-sign">+</div>' : '');
-    }).join('');
-
-    footerLogic.innerHTML = `
-        <div class="price-summary">
-            <div class="summary-line"><span>Total MRP:</span> <span style="text-decoration:line-through">₹${totalMRP}</span></div>
-            <div class="summary-line highlight"><span>Combo Price:</span> <span>₹${totalSell}</span></div>
-        </div>
-        <button class="buy-now-btn" style="width:100%; margin-top:10px;" onclick="addKitToCart('${product.id}')">ADD BUNDLE TO CART</button>`;
-        
-    modal.style.display = 'flex';
-}
-
-function addKitToCart(id) {
-    const product = window.allProducts.find(p => String(p.id) === String(id));
-    if (!product) return;
-    const ids = product.kitComponents.split(',').map(cid => cid.trim());
-    ids.forEach(cid => {
-        const item = window.allProducts.find(p => String(p.id) === String(cid));
-        if (item && typeof addToCart === 'function') addToCart(item.id, item);
-    });
-    closeModal();
-}
-
-function closeModal() { document.getElementById('kit-modal').style.display = 'none'; }
-
-// --- 5. SEARCH ENGINE (Deduplicated) ---
-
-function initProductPageSearch() {
-    const input = document.getElementById('productSearch');
-    const resultsContainer = document.getElementById('searchResults');
-    if (!input || !resultsContainer) return;
-
-    input.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase().trim();
-        if (query.length < 1) {
-            resultsContainer.style.display = 'none';
-            return;
-        }
-
-        const uniqueMatches = new Map();
-        window.allProducts.forEach(p => {
-            if (p.name?.toLowerCase().includes(query) || String(p.id).includes(query)) {
-                if (!uniqueMatches.has(p.id)) uniqueMatches.set(p.id, p);
-            }
+// Add this logic where you initialize currentSelections
+function parseVariantFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const variantStr = params.get('variant');
+    if (variantStr) {
+        const pairs = variantStr.split(',');
+        pairs.forEach(pair => {
+            const [k, v] = pair.split(':');
+            if (k && v) currentSelections[k] = v;
         });
-        renderSearchList(Array.from(uniqueMatches.values()));
-    });
-}
-
-function renderSearchList(matches) {
-    const container = document.getElementById('searchResults');
-    if (matches.length === 0) {
-        container.innerHTML = `<div style="padding:15px; color:#999;">No results</div>`;
-    } else {
-        container.innerHTML = matches.slice(0, 8).map(p => `
-            <div class="search-item" onclick="window.location.href='product.html?id=${p.id}'" 
-                 style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid #eee; cursor:pointer;">
-                <img src="${p.images[0]}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
-                <div style="flex:1">
-                    <div style="font-weight:600; font-size:0.85rem;">${p.name}</div>
-                    <div style="font-size:0.75rem; color:var(--primary);">₹${p.sale}</div>
-                </div>
-            </div>`).join('');
     }
-    container.style.display = 'block';
 }
 
-// --- 6. UTILITIES & SIMILAR PRODUCTS ---
+function initShareButton() {
+    // 1. MATCH THE ID: Changed from 'share-btn' to 'img-share-btn'
+    const shareBtn = document.getElementById('img-share-btn'); 
+    if (!shareBtn) return;
 
-function changeMainImage(el, src) {
+    shareBtn.onclick = async () => {
+        // 2. CONSTRUCT CLEAN URL: Ensure the shared link has the current variant
+        const variantSlug = Object.entries(currentSelections)
+            .map(([k, v]) => `${k}:${v}`)
+            .join(',');
+        
+        const shareUrl = `${window.location.origin}${window.location.pathname}?id=${selectedVariant.id}&variant=${encodeURIComponent(variantSlug)}`;
+
+        const shareData = {
+            title: selectedVariant.name,
+            text: `Check out the ${selectedVariant.name} (${selectedVariant.attrValue}) on Resin Cosmos!`,
+            url: shareUrl
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                // Fallback for desktop: Copy the generated shareUrl to clipboard
+                await navigator.clipboard.writeText(shareUrl);
+                alert('Link copied to clipboard!');
+            }
+        } catch (err) {
+            console.error('Share failed:', err);
+        }
+    };
+}
+
+// Call initShareButton() inside your window.onload or main init function
+/**
+ * 4. UI UPDATES (Price, Badges, WhatsApp)
+ */
+function updateVariantSpecificUI() {
+    const sale = parseFloat(selectedVariant.sale);
+    const mrp = parseFloat(selectedVariant.mrp);
+    const stockCount = parseInt(selectedVariant.stock) || 0; // Get stock from DB
+
+    document.getElementById('product-sale').innerText = `₹${sale}`;
+    document.getElementById('product-mrp').innerText = `₹${mrp}`;
+
+    // --- STOCK LOGIC ---
+    const stockEl = document.getElementById('stock-status');
+    if (stockEl) {
+        if (stockCount <= 0) {
+            stockEl.innerHTML = `<span class="out-of-stock"><i class="fas fa-times-circle"></i> Out of Stock</span>`;
+            document.getElementById('whatsapp-inquiry').style.opacity = "0.5"; // Dim the button
+            document.getElementById('whatsapp-inquiry').innerText = "Notify Me on WhatsApp";
+        } else if (stockCount > 0 && stockCount <= 5) {
+            stockEl.innerHTML = `<span class="low-stock"><i class="fas fa-fire"></i> Only ${stockCount} left! Selling fast</span>`;
+            document.getElementById('whatsapp-inquiry').style.opacity = "1";
+            document.getElementById('whatsapp-inquiry').innerHTML = `<i class="fab fa-whatsapp"></i> Inquiry Now`;
+        } else {
+            stockEl.innerHTML = `<span class="in-stock"><i class="fas fa-check-circle"></i> In Stock (${stockCount} units)</span>`;
+            document.getElementById('whatsapp-inquiry').style.opacity = "1";
+        }
+    }
+
+    // Delivery Tag
+    const deliveryTag = document.getElementById('free-delivery-tag');
+    deliveryTag.style.display = (selectedVariant.freeDelivery === "TRUE" || selectedVariant.freeDelivery === true) ? 'flex' : 'none';
+
+    // Discount Calculation
+    const discEl = document.getElementById('detail-discount');
+    const badge = document.getElementById('image-discount-badge');
+    
+    if (mrp > sale) {
+        const d = Math.round(((mrp - sale) / mrp) * 100);
+        discEl.innerText = `${d}% OFF`;
+        badge.innerText = `${d}% OFF`;
+        discEl.style.display = 'inline-block';
+        badge.style.display = 'block';
+    } else {
+        discEl.style.display = 'none';
+        badge.style.display = 'none';
+    }
+
+// 1. Set Description
+    const descEl = document.getElementById('product-description');
+    if (descEl) {
+        descEl.innerText = selectedVariant.description || "Premium quality product from Resin Cosmos.";
+    }
+
+// --- 1. Handle Highlights ---
+const otherDetailsContainer = document.getElementById('other-details-section');
+const otherDetailsList = document.getElementById('other-details-list');
+
+if (selectedVariant.otherDetails && otherDetailsList) {
+    otherDetailsContainer.style.display = 'block';
+    const items = selectedVariant.otherDetails.split(',');
+
+    // Only update the internal list, NOT the whole section
+    otherDetailsList.innerHTML = items.map(item => {
+        const trimmedItem = item.trim();
+        const firstSpaceIndex = trimmedItem.indexOf(' ');
+        if (firstSpaceIndex !== -1) {
+            const head = trimmedItem.substring(0, firstSpaceIndex);
+            const value = trimmedItem.substring(firstSpaceIndex + 1);
+            return `<div class="detail-line"><strong>${head}:-</strong> <span>${value}</span></div>`;
+        }
+        return `<div class="detail-line"><span>${trimmedItem}</span></div>`;
+    }).join('');
+} else {
+    otherDetailsContainer.style.display = 'none';
+}
+
+// --- 2. Handle Specifications ---
+const specsEl = document.getElementById('product-specs');
+if (specsEl) {
+    // Only update the grid items, do NOT touch the button or title in HTML
+    specsEl.innerHTML = `
+        <div class="spec-item"><span>Weight</span><strong>${selectedVariant.weight}</strong></div>
+        <div class="spec-item"><span>Length</span><strong>${selectedVariant.length}</strong></div>
+        <div class="spec-item"><span>Width</span><strong>${selectedVariant.width}</strong></div>
+        <div class="spec-item"><span>Height</span><strong>${selectedVariant.height}</strong></div>
+        <div class="spec-item"><span>Category</span><strong>${selectedVariant.subcategory}</strong></div>
+        <div class="spec-item"><span>HSN</span><strong>${selectedVariant.hsn}</strong></div>
+        <div class="spec-item"><span>Tax</span><strong>${selectedVariant.tax_rate}%</strong></div>
+    `;
+}
+// --- 3. ADD THE RESET CODE HERE ---
+    ['highlights', 'specs'].forEach(id => {
+        const wrapper = document.getElementById(`wrapper-${id}`);
+        if (wrapper) {
+            wrapper.classList.remove('open');
+            // Find the button next to the wrapper and reset its text
+            const btn = wrapper.nextElementSibling;
+            if (btn && btn.classList.contains('mini-toggle-btn')) {
+                btn.innerText = 'Show All';
+            }
+        }
+    });
+
+    // Update WhatsApp link
+    const wpBtn = document.getElementById('whatsapp-inquiry');
+    const msg = encodeURIComponent(`Hi Resin Cosmos! I'm interested in: ${selectedVariant.name} (${selectedVariant.attrValue}). SKU: ${selectedVariant.sku}`);
+    wpBtn.onclick = () => window.open(`https://wa.me/919724362981?text=${msg}`, '_blank');
+}
+
+/**
+ * 5. UTILITY FUNCTIONS
+ */
+function updateMainImg(el, src) {
     document.getElementById('main-display-img').src = src;
-    document.querySelectorAll('#thumb-list img').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.thumb-scroll-container img').forEach(img => img.classList.remove('active'));
     el.classList.add('active');
 }
 
-function renderBreadcrumbs() {
-    const bc = document.getElementById('breadcrumb');
-    if(bc) bc.innerHTML = `<a href="../resincosmos.html">Home</a> / <span>${currentProduct.category}</span>`;
-}
+function initGlobalSearch() {
+    const input = document.getElementById('productSearch');
+    const dropdown = document.getElementById('searchResults');
+    if (!input || !dropdown) return;
 
-function renderSimilarByTag(tagString, currentId) {
-    const grid = document.getElementById('similar-products-grid');
-    if (!grid) return;
+    input.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase().trim();
+        if (q.length < 1) { dropdown.style.display = 'none'; return; }
 
-    const currentTags = (tagString || "").split(',').map(t => t.trim().toLowerCase());
-    
-    // Use a Set to track IDs and prevent internal repeats in the list
-    const seenIds = new Set();
-    // Add current product ID to seenIds so it is automatically skipped
-    seenIds.add(String(currentId));
+        const matches = window.allProducts.filter(p => 
+            (p.name.toLowerCase().includes(q) || String(p.id).includes(q)) && 
+            p.isActive !== "FALSE"
+        ).slice(0, 6);
 
-    const similar = window.allProducts.filter(p => {
-        const pId = String(p.id);
-        
-        // Skip if it's the current product OR we've already added this ID to the list
-        if (seenIds.has(pId)) return false;
-
-        const pTags = (p.tagweb || "").split(',').map(t => t.trim().toLowerCase());
-        const isMatch = currentTags.some(tag => pTags.includes(tag));
-
-        if (isMatch) {
-            seenIds.add(pId);
-            return true;
-        }
-        return false;
-    }).slice(0, 4); // Limit to 4 items
-
-    grid.innerHTML = similar.map(p => `
-        <div class="product-card" onclick="window.location.href='product.html?id=${p.id}'">
-            <div class="card-img-container">
-                <img src="${p.images[0]}" loading="lazy">
+        dropdown.innerHTML = matches.map(p => `
+            <div class="search-item" onclick="window.location.href='product.html?id=${p.id}'" 
+                 style="display:flex; align-items:center; gap:12px; padding:10px; cursor:pointer; border-bottom:1px solid #f0f0f0;">
+                <img src="${p.images[0]}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+                <div>
+                    <div style="font-weight:700; font-size:0.85rem; color:#000;">${p.name}</div>
+                    <div style="font-size:0.75rem; color:#28a745; font-weight:700;">₹${p.sale}</div>
+                </div>
             </div>
-            <h4>${p.name}</h4>
-            <div class="price-row"><span>₹${p.sale}</span></div>
-        </div>`).join('');
+        `).join('');
+        dropdown.style.display = 'block';
+    });
+
+    // Close search if clicking outside
+    document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !dropdown.contains(e.target)) dropdown.style.display = 'none';
+    });
 }
 
-function handleWhatsAppOrder() {
-    const text = `Interested in: ${currentProduct.name} (₹${currentProduct.sale})\nLink: ${window.location.href}`;
-    window.open(`https://wa.me/919724362981?text=${encodeURIComponent(text)}`, '_blank');
+// Global scope addToCartSilent if not defined in cart.js
+window.addToCartSilent = window.addToCartSilent || function(sku) {
+    console.log("Adding to cart SKU:", sku);
+    if (typeof addToCart === "function") addToCart(sku);
+};
+
+// Initialize the whole engine
+window.addEventListener('DOMContentLoaded', initProductPage);
+
+function renderSimilarProducts() {
+    const grid = document.getElementById('similar-grid');
+    if (!grid || !selectedVariant) return;
+
+    const categoryStr = selectedVariant.category || "";
+    const currentCat = categoryStr.split(',')[0].trim().toLowerCase();
+
+    if (!currentCat) return;
+
+    // 1. Filter the list
+    const similar = window.allProducts.filter(p => {
+        const pCat = (p.category || "").toLowerCase();
+        // Trim IDs to ensure "101" matches "101 "
+        return pCat.includes(currentCat) && 
+               String(p.id).trim() !== String(selectedVariant.id).trim() &&
+               p.isActive !== "FALSE";
+    });
+
+    // 2. Map by ID to guarantee uniqueness
+    // We use a Map to ensure only ONE instance of an ID exists
+    const uniqueMap = new Map();
+    similar.forEach(p => {
+        const cleanId = String(p.id).trim();
+        if (!uniqueMap.has(cleanId)) {
+            uniqueMap.set(cleanId, p);
+        }
+    });
+
+    const uniqueSimilar = Array.from(uniqueMap.values()).slice(0, 4);
+
+    // 3. Render
+    if (uniqueSimilar.length === 0) {
+        grid.innerHTML = `<p style="grid-column: 1/-1; color: #888; text-align: center;">No similar products found.</p>`;
+        return;
+    }
+
+    grid.innerHTML = uniqueSimilar.map(p => {
+        const wpLink = `https://wa.me/919724362981?text=${encodeURIComponent("Hi! I'm interested in " + p.name + " (ID: " + p.id + ")")}`;
+        const hasDiscount = parseFloat(p.mrp) > parseFloat(p.sale);
+        const firstImg = (p.images && p.images.length > 0) ? p.images[0] : 'placeholder.jpg';
+
+        return `
+            <div class="shop-card similar-card">
+                <div class="card-img-wrap" onclick="window.location.href='product.html?id=${p.id}'">
+                    <img src="${firstImg}" loading="lazy" alt="${p.name}">
+                </div>
+                <div class="card-info">
+                    <h5 onclick="window.location.href='product.html?id=${p.id}'" style="cursor:pointer;">${p.name}</h5>
+                    <p class="brand-name">${p.brand || 'RESIN COSMOS'}</p>
+                    <div class="price-box">
+                        <span class="sale">₹${p.sale}</span>
+                        ${hasDiscount ? `<span class="mrp" style="text-decoration:line-through; font-size:0.8rem; color:#888; margin-left:8px;">₹${p.mrp}</span>` : ''}
+                    </div>
+                    <div class="card-buttons" style="display:flex; gap:5px; margin-top:10px;">
+                        <button class="action-btn add-cart-btn" onclick="addToCartSilent('${p.id}')" style="flex:1;">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                        <a href="${wpLink}" target="_blank" class="action-btn wp-btn" style="flex:1; text-align:center;">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
-// Start Engine on Load
-window.addEventListener('DOMContentLoaded', () => {
-    initProductPage();
-    initProductPageSearch();
-});
+// Call this inside your init function:
+function autoRenderOtherCategories() {
+    const area = document.getElementById('other-categories-area');
+    if (!area || !window.allProducts || !selectedVariant) return;
 
-// Close search on click outside
-document.addEventListener('click', (e) => {
-    const results = document.getElementById('searchResults');
-    if (results && !e.target.closest('.search-bar')) results.style.display = 'none';
-});
+    area.innerHTML = ''; 
+
+    const categoryNames = {
+        "MDF": "The MDF Collection",
+        "Resin": "Resin & Hardener Supplies"
+    };
+
+    const subCategoryNames = {
+        "base": "Premium Clock Bases",
+        "raw": "Handcrafted Raw Materials",
+        "clock": "Designer Clock Collection",
+        "epoxy": "High-Gloss Epoxy Resin"
+    };
+
+    const allCategories = [...new Set(window.allProducts.map(p => p.category))];
+    const otherCategories = allCategories.filter(cat => cat && cat !== selectedVariant.category);
+
+    otherCategories.forEach(catName => {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'main-category-block';
+        
+        const catTitle = categoryNames[catName] || catName;
+        categoryDiv.innerHTML = `<h1 class="main-cat-header">${catTitle}</h1>`;
+
+        const subInCat = [...new Set(window.allProducts
+            .filter(p => p.category === catName)
+            .map(p => p.subcategory)
+        )];
+
+        subInCat.forEach(subName => {
+            // --- NEW LOGIC START ---
+            // 1. Filter raw list (exclude current, ensure active)
+            const rawList = window.allProducts.filter(p => 
+                p.category === catName && 
+                p.subcategory === subName && 
+                p.isActive !== "FALSE" &&
+                String(p.id) !== String(selectedVariant.id)
+            );
+
+            // 2. Group by ID to ensure unique products only
+            const uniqueProductsMap = new Map();
+            rawList.forEach(p => {
+                if (!uniqueProductsMap.has(p.id)) {
+                    uniqueProductsMap.set(p.id, p); // Only keep the first variant found for this ID
+                }
+            });
+
+            // 3. Convert map back to array and slice for the UI
+           const products = Array.from(uniqueProductsMap.values()).slice(0, 1000);
+            // --- NEW LOGIC END ---
+
+            if (products.length > 0) {
+                const subTitle = subCategoryNames[subName] || subName;
+                
+                const rowHTML = `
+                    <section class="tag-row-section">
+                        <h2 class="tag-row-title">${subTitle}</h2>
+                        <div class="tag-scroll-container">
+                            ${products.map(p => {
+                                const hasDiscount = parseFloat(p.mrp) > parseFloat(p.sale);
+                                return `
+                                <div class="tag-card">
+                                    <div class="tag-card-img" onclick="window.location.href='product.html?id=${p.id}'">
+                                        <img src="${p.images ? p.images[0] : ''}" loading="lazy">
+                                    </div>
+                                    <div class="tag-card-info">
+                                        <h5>${p.name}</h5>
+                                        <div class="tag-price">
+                                            <span class="sale">₹${p.sale}</span>
+                                            ${hasDiscount ? `<span class="mrp">₹${p.mrp}</span>` : ''}
+                                        </div>
+                                        <div class="tag-buttons">
+                                            <button class="tag-btn-add" onclick="addToCartSilent('${p.id}')">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `}).join('')}
+                        </div>
+                    </section>
+                `;
+                categoryDiv.insertAdjacentHTML('beforeend', rowHTML);
+            }
+        });
+
+        area.appendChild(categoryDiv);
+    });
+}
+
+/**
+ * Independent Toggle for Highlights and Specs
+ * @param {string} sectionId - 'highlights' or 'specs'
+ */
+function toggleSection(sectionId) {
+    const wrapper = document.getElementById(`wrapper-${sectionId}`);
+    const btn = event.currentTarget; // Safer than event.target
+
+    if (wrapper.classList.contains('open')) {
+        wrapper.classList.remove('open');
+        btn.innerText = 'Show All';
+    } else {
+        wrapper.classList.add('open');
+        btn.innerText = 'Show Less';
+    }
+}
