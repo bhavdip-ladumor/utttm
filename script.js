@@ -19,99 +19,196 @@ window.getProductById = function(id) {
 };
 
 // 3. Sidebar and Menu Logic
+// Function to open/close the sidebar
 function toggleMenu() {
     const side = document.getElementById('side-panel');
     const overlay = document.getElementById('menu-overlay');
     if(side) side.classList.toggle('active');
     if(overlay) overlay.classList.toggle('active');
+    
+    // Lock background scroll when menu is open
     document.body.style.overflow = (side && side.classList.contains('active')) ? 'hidden' : 'auto';
 }
 
-function syncSideMenu() {
-    const navPlaceholder = document.getElementById('nav-placeholder');
-    const sidePanelLinks = document.getElementById('side-panel-links');
-    if(!navPlaceholder || !sidePanelLinks) return;
+// Ensure you have these functions to handle the Room overlay
+function openRoom(roomId) {
+    const overlay = document.getElementById('room-overlay');
+    const rooms = document.querySelectorAll('.room-content');
     
-    const checkNav = setInterval(() => {
-        const cards = navPlaceholder.querySelectorAll('.card');
-        if (cards.length > 0) {
-            sidePanelLinks.innerHTML = "";
-            cards.forEach(card => {
-                const originalLink = card.querySelector('a');
-                const title = card.querySelector('h3').innerText;
-                const iconClass = card.querySelector('i').className;
-                const newLink = document.createElement('a');
-                newLink.href = originalLink.getAttribute('href');
-                newLink.innerHTML = `<i class="${iconClass}"></i> ${title}`;
-                newLink.onclick = () => toggleMenu();
-                sidePanelLinks.appendChild(newLink);
-            });
-            clearInterval(checkNav);
-        }
-    }, 500);
+    // Hide all rooms first
+    rooms.forEach(r => r.classList.add('hidden'));
+    
+    // Show overlay and specific room
+    overlay.classList.remove('hidden');
+    document.getElementById(roomId).classList.remove('hidden');
+    
+    // Lock body scroll for the room view
+    document.body.style.overflow = 'hidden';
 }
 
-/**
- * 4. SEARCH LOGIC (Overlay & Live)
- */
-function openSearch() {
-    const overlay = document.getElementById('search-overlay');
-    if (overlay) {
-        overlay.style.display = 'block';
-        const input = document.getElementById('main-search') || document.getElementById('search-input');
-        if(input) input.focus();
-    }
+function closeRoom() {
+    document.getElementById('room-overlay').classList.add('hidden');
+    document.body.style.overflow = 'auto';
 }
 
-function closeSearch() {
-    const overlay = document.getElementById('search-overlay');
-    if (overlay) overlay.style.display = 'none';
-}
 
-// Global search handler used by both root and subfolder search bars
 function handleLiveSearch(query) {
-    const resultsBox = document.getElementById('live-search-results') || document.getElementById('search-results');
-    if (!resultsBox) return;
+    // 1. Target the correct container (Portal vs Home Dropdown)
+    const portal = document.getElementById('search-overlay-portal');
+    const isPortalOpen = portal && !portal.classList.contains('hidden');
+    
+    const resultsContainer = isPortalOpen 
+        ? portal.querySelector('.portal-results-container') 
+        : document.getElementById('live-search-results');
 
-    const q = query.toLowerCase().trim();
-    if (q.length < 2) {
-        resultsBox.style.display = 'none';
+    if (!resultsContainer) return;
+
+    const term = query.toLowerCase().trim();
+
+    // 2. Clear and exit if query is too short
+    if (!term || term.length < 2) {
+        resultsContainer.innerHTML = '';
+        resultsContainer.classList.remove('active');
         return;
     }
 
-    const matches = window.allProducts.filter(p => 
-        p.name.toLowerCase().includes(q) || 
-        (p.tagweb && p.tagweb.toLowerCase().includes(q)) ||
-        p.category.toLowerCase().includes(q)
-    ).slice(0, 5);
+    const allStores = window.allStores || [];
+    const allProducts = window.allProducts || [];
 
-    if (matches.length > 0) {
-        resultsBox.innerHTML = matches.map(p => `
-            <div class="live-item" onclick="window.location.href='product.html?id=${p.id}'" style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid #eee; cursor:pointer;">
-                <img src="${p.images[0]}" onerror="this.src='assets/placeholder.png'" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
-                <div class="live-item-info">
-                    <h4 style="margin:0; font-size:0.9rem;">${p.name}</h4>
-                    <p style="margin:0; font-size:0.8rem; color:#27ae60;">₹${p.sale}</p>
+    // 3. FILTER STORES
+    const storesFound = allStores.filter(s => 
+        s.name.toLowerCase().includes(term) || 
+        (s.keywords && s.keywords.toLowerCase().includes(term))
+    );
+
+    // 4. FILTER PRODUCTS + VARIANT DETECTION (Deduplication)
+    const seenProducts = {}; 
+    const uniqueProducts = [];
+
+    allProducts.forEach(p => {
+        const isMatch = p.name.toLowerCase().includes(term) || 
+                        (p.keyword && p.keyword.toLowerCase().includes(term));
+        
+        if (isMatch) {
+            if (!seenProducts[p.id]) {
+                // First time seeing this ID. 
+                // We set hasOptions to false initially.
+                p.hasOptions = false; 
+                seenProducts[p.id] = p;
+                uniqueProducts.push(p);
+            } else {
+                // If we see the SAME ID again, NOW we mark it as having options
+                seenProducts[p.id].hasOptions = true;
+            }
+        }
+    });
+
+    const prodsFound = uniqueProducts.slice(0, 20); // Show more in full overlay
+
+    // 5. BUILD HTML OUTPUT
+    let htmlOutput = "";
+
+    // BUILD STORES SECTION
+    if (storesFound.length > 0) {
+        htmlOutput += `<div class="smart-search-label">Official Divisions</div>`;
+        storesFound.forEach(store => {
+            htmlOutput += `
+            <div class="smart-store-card" onclick="location.href='/${store.link}'">
+                <img src="/${store.image}" class="smart-store-img">
+                <div class="smart-store-info">
+                    <span class="smart-store-tag">Official Store</span>
+                    <h4>${store.name}</h4>
+                    <p>${store.description}</p>
                 </div>
-            </div>
-        `).join('') + `
-        <div style="padding:10px; text-align:center; font-size:0.8rem; background:#f9f9f9; cursor:pointer;" onclick="handleManualSearch()">
-            View all results for "${q}"
-        </div>`;
-        resultsBox.style.display = 'flex';
-        resultsBox.style.flexDirection = 'column';
-    } else {
-        resultsBox.innerHTML = `<div style="padding:15px; text-align:center; font-size:0.85rem;">No results found</div>`;
-        resultsBox.style.display = 'block';
+            </div>`;
+        });
     }
+
+    // BUILD PRODUCTS SECTION
+    if (prodsFound.length > 0) {
+        htmlOutput += `<div class="smart-search-label">Available Products</div>`;
+        prodsFound.forEach(prod => {
+            htmlOutput += `
+            <div class="smart-prod-row" onclick="location.href='/setbrand/resin/product/product.html?id=${prod.id}'">
+                <img src="${prod.images[0]}" class="smart-prod-img">
+                <div class="smart-prod-details">
+                    <span class="name">${prod.name}</span>
+                    <div class="price-line">
+                        <span class="old-price">₹${prod.mrp}</span>
+                        <span class="sale-price">₹${prod.sale}</span>
+                        ${prod.hasOptions ? `<span class="variant-badge">Options Available</span>` : ''}
+                    </div>
+                </div>
+            </div>`;
+        });
+    }
+
+    // 6. HANDLE EMPTY STATE
+    if (storesFound.length === 0 && prodsFound.length === 0) {
+        htmlOutput = `
+            <div style="padding:60px 20px; text-align:center; color:#999;">
+                <i class="fa-solid fa-magnifying-glass" style="font-size:2.5rem; margin-bottom:15px; opacity:0.2;"></i>
+                <p>No results found for "<strong>${query}</strong>"</p>
+                <small>Try checking your spelling or use general terms like "Resin"</small>
+            </div>`;
+    }
+
+    // 7. INJECT & SHOW
+    resultsContainer.innerHTML = htmlOutput;
+    resultsContainer.classList.add('active');
 }
 
+// 1. Handle the 🔍 Button Click
+// 1. Open the Portal
 function handleManualSearch() {
-    const input = document.getElementById('main-search') || document.getElementById('search-input');
-    if (input && input.value.trim().length > 0) {
-        window.location.href = `search.html?q=${encodeURIComponent(input.value.trim())}`;
+    const portal = document.getElementById('search-overlay-portal');
+    const mainInput = document.getElementById('main-search');
+    const portalInput = document.getElementById('portal-search-input');
+
+    // 1. Show the Overlay
+    portal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    // 2. Transfer the value from Home Search to Portal Search
+    if (mainInput && mainInput.value.trim() !== "") {
+        portalInput.value = mainInput.value;
+        
+        // 3. Force the search results to render inside the Portal
+        handleLiveSearch(portalInput.value);
     }
+    
+    portalInput.focus();
 }
+
+// Ensure "Enter" key on the portal input also keeps results updated
+document.getElementById('portal-search-input')?.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        handleLiveSearch(this.value);
+    }
+});
+
+
+// Function to close the Full-Screen Search Overlay
+window.closeSearchPortal = function() {
+    const portal = document.getElementById('search-overlay-portal');
+    const portalInput = document.getElementById('portal-search-input');
+    
+    if (portal) {
+        // 1. Hide the portal
+        portal.classList.add('hidden');
+        
+        // 2. Re-enable scrolling on the main page
+        document.body.style.overflow = 'auto';
+        
+        // 3. Optional: Clear the input and results so it's fresh for next time
+        if (portalInput) portalInput.value = "";
+        const resultsArea = portal.querySelector('.portal-results-container');
+        if (resultsArea) {
+            resultsArea.innerHTML = "";
+            resultsArea.classList.remove('active');
+        }
+    }
+};
 
 /**
  * 5. COMPONENT INJECTION (Cart & Search)
@@ -167,16 +264,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     // ---------------------------
 
-    // Setup input listener for root search bar if it exists
-    const rootSearch = document.getElementById('main-search');
-    if (rootSearch) {
-        rootSearch.addEventListener('input', (e) => handleLiveSearch(e.target.value));
-        rootSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleManualSearch(); });
-    }
-
-    if (document.getElementById('product-grid') && typeof loadProducts === 'function') {
-        loadProducts();
-    }
+    
 });
 
 
@@ -246,3 +334,13 @@ window.closeRoom = function() {
 let currentSlideIndex = 0;
 const slides = document.querySelectorAll('.slide');
 const dots = document.querySelectorAll('.dot');
+
+
+// Close search results when clicking outside
+document.addEventListener('click', function(e) {
+    const searchBox = document.querySelector('.main-search-box');
+    const results = document.getElementById('live-search-results');
+    if (searchBox && !searchBox.contains(e.target)) {
+        results.classList.remove('active');
+    }
+});
