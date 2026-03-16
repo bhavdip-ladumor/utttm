@@ -36,19 +36,161 @@
     <div id="header-placeholder"></div>
     
 
-<div class="search-section-wrapper">
-    <div class="main-search-bar">
+<section class="hero-search-section">
+    <div class="top-bar-controls">
         <button class="menu-open-btn" onclick="toggleMenu()">
             <i class="fas fa-bars"></i> <span>MENU</span>
         </button>
 
-        <div class="search-container" style="position: relative; width: 100%;">
-    <div class="search-input-group">
-        <input type="text" id="main-search" placeholder="Search products, brands..." autocomplete="off">
-        <button onclick="handleManualSearch()"><i class="fas fa-search"></i></button>
+        <div id="auth-container">
+            <button id="login-btn" class="btn-login-trigger">Sign In</button>
+            
+            <div id="profile-btn" class="profile-wrapper hidden">
+                <div class="user-meta">
+                    <small>Hello,</small>
+                    <span id="user-display-name">Guest</span>
+                </div>
+                <img src="assets/default-user.png" id="user-photo" alt="Profile" class="profile-icon">
+                
+                <div class="profile-dropdown">
+                    <div class="dropdown-user-card">
+                        <strong id="drop-name">Customer</strong>
+                        <p id="drop-email"></p>
+                    </div>
+                    <hr>
+                    <a href="#profile" class="drop-item">My Profile</a>
+                    <a href="#orders" class="drop-item">My Orders</a>
+                    <button id="logout-btn" class="btn-logout">Sign Out</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="live-search-results" class="live-search-dropdown"></div>
+
+    <div class="hero-container">
+        <h1 class="hero-title">Everything you need, <span>in one place.</span></h1>
+        
+        <div class="main-search-box">
+            <div class="search-input-wrapper">
+                <input type="text" id="main-search" oninput="handleLiveSearch(this.value)" placeholder="Search store, service, product..." autocomplete="off">
+                <button class="search-btn" onclick="handleManualSearch()">🔍</button>
+            </div>
+            <div id="live-search-results" class="live-search-dropdown"></div>
+        </div>
+
+        <div class="service-info-tags">
+            <span>🛡️ Best Service</span>
+            <span class="dot">•</span>
+            <span>⭐ Trusted Store</span>
+            <span class="dot">•</span>
+            <span>🤝 Verified Vendors</span>
+            <span class="dot">•</span>
+            <span>✨ Premium Quality</span>
+        </div>
+    </div>
+</section>
+
+<div id="auth-modal" class="modal hidden">
+    <div class="modal-card">
+        <div class="auth-tabs">
+            <button id="tab-login" class="active">Login</button>
+            <button id="tab-signup">New Account</button>
+        </div>
+
+        <form id="login-form" class="auth-form">
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-pw" placeholder="Password" required>
+            <p class="forgot-link" id="forgot-pw">Forgot Password?</p>
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+
+        <form id="signup-form" class="auth-form hidden">
+            <div class="form-row">
+                <input type="text" id="s-fname" placeholder="First Name" required>
+                <input type="text" id="s-lname" placeholder="Last Name" required>
+            </div>
+            <input type="email" id="s-email" placeholder="Email Address" required>
+            <input type="tel" id="s-phone" placeholder="Mobile Number" required>
+            <textarea id="s-address" placeholder="Full Delivery Address" rows="2" required></textarea>
+            <input type="password" id="s-pw" placeholder="Password (min 6 chars)" required>
+            <button type="submit" class="btn-primary">Create Account</button>
+        </form>
+
+        <div class="divider"><span>OR</span></div>
+        <button id="google-login-alt" onclick="loginWithGoogle()" class="btn-google">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18">
+            Continue with Google
+        </button>
+        <button onclick="closeAuth()" class="btn-close">Cancel</button>
+    </div>
 </div>
+
+<section id="profile-page" class="hidden">
+    <button onclick="closeProfile()" class="close-profile-btn" aria-label="Close Profile">✕</button>
+    <div class="profile-container">
+        <aside class="profile-sidebar">
+            <div class="sidebar-user">
+                <img src="" id="p-sidebar-pic" alt="User">
+                <h3 id="p-sidebar-name">Loading...</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="active" data-section="overview">Account Overview</button>
+                <button data-section="orders">My Orders</button>
+                <button data-section="address">Shipping Address</button>
+                <button id="p-logout">Logout</button>
+            </nav>
+        </aside>
+
+        <div class="profile-content">
+            <div id="overview-section">
+                <h2>Account Details</h2>
+                <form id="edit-profile-form">
+                    <div class="form-group">
+                        <label>Personal Info</label>
+                        <div class="form-row">
+                            <input type="text" id="p-fname" placeholder="First Name">
+                            <input type="text" id="p-lname" placeholder="Last Name">
+                        </div>
+                        <input type="tel" id="p-phone" placeholder="Mobile">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Shipping Details</label>
+                        <input type="text" id="addr-house" placeholder="House/Flat No.">
+                        <input type="text" id="addr-street" placeholder="Street Name">
+                        <input type="text" id="addr-area" placeholder="Area / Sector">
+                        <div class="form-row">
+                            <input type="text" id="addr-city" placeholder="City">
+                            <input type="text" id="addr-pin" placeholder="Pincode">
+                        </div>
+                    </div>
+                    <button type="button" id="btn-update-profile" class="btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="search-overlay-portal" class="search-portal hidden">
+    <div class="search-portal-header">
+        <button class="back-btn" onclick="closeSearchPortal()">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <div class="search-input-wrapper">
+            <input type="text" id="portal-search-input" placeholder="Search for Resin, MDF, or Art..." oninput="handleLiveSearch(this.value)">
+        </div>
+    </div>
+    
+    <div id="live-search-results" class="portal-results-container">
+        </div>
+</div>
+
+<div id="reauth-modal" class="modal hidden">
+    <div class="modal-card security-card">
+        <h3>Security Verification</h3>
+        <p>Confirm your password to save changes.</p>
+        <input type="password" id="reauth-password" placeholder="Enter Password">
+        <button id="btn-confirm-reauth" class="btn-primary">Verify & Save</button>
+        <button onclick="document.getElementById('reauth-modal').classList.add('hidden')" class="btn-close">Cancel</button>
     </div>
 </div>
 
@@ -62,11 +204,60 @@
         </button>
     </div>
 
-    <div class="side-nav-content">
-        <p class="nav-label">Explore Divisions</p>
-        <div id="side-panel-links">
-            </div>
+<div class="side-nav-content">
+    <p class="nav-label">Main Divisions</p>
+    <div id="side-panel-links">
+        
+        <a href="javascript:void(0)" class="side-nav-item" onclick="openRoom('stores-room'); toggleMenu();">
+            <span class="nav-icon">🛍️</span> Retail Stores
+        </a>
+
+        <a href="javascript:void(0)" class="side-nav-item" onclick="openRoom('machine-room'); toggleMenu();">
+            <span class="nav-icon">⚙️</span> Machine & Job Work
+        </a>
+
+        <a href="javascript:void(0)" class="side-nav-item" onclick="openRoom('b2b-room'); toggleMenu();">
+            <span class="nav-icon">🏗️</span> Industrial Solutions
+        </a>
+
+        <a href="javascript:void(0)" class="side-nav-item" onclick="openRoom('content-room'); toggleMenu();">
+            <span class="nav-icon">📰</span> Daily Pulse
+        </a>
+
+        <a href="javascript:void(0)" class="side-nav-item" onclick="openRoom('experts-room'); toggleMenu();">
+            <span class="nav-icon">🛠️</span> Home Experts
+        </a>
+
+        <hr class="nav-divider">
+
+        <p class="nav-label">Direct Services</p>
+
+        <a href="divisions/gift-art.html" class="side-nav-item" onclick="toggleMenu()">
+            <span class="nav-icon"><i class="fas fa-palette"></i></span> Gift & Art Store
+        </a>
+
+        <a href="divisions/b2b.html" class="side-nav-item" onclick="toggleMenu()">
+            <span class="nav-icon"><i class="fas fa-handshake"></i></span> B2B Divisions
+        </a>
+
+        <a href="divisions/machine-job-work.html" class="side-nav-item" onclick="toggleMenu()">
+            <span class="nav-icon"><i class="fas fa-tools"></i></span> Machine Work
+        </a>
+
+        <a href="divisions/retail-b2c.html" class="side-nav-item" onclick="toggleMenu()">
+            <span class="nav-icon"><i class="fas fa-shopping-cart"></i></span> Uttamhub Retail
+        </a>
+
+        <a href="divisions/home-essentials.html" class="side-nav-item" onclick="toggleMenu()">
+            <span class="nav-icon"><i class="fas fa-couch"></i></span> Home Essentials
+        </a>
+
+        <a href="#footer-placeholder" class="side-nav-item" onclick="toggleMenu()">
+            <span class="nav-icon"><i class="fas fa-headset"></i></span> Custom Support
+        </a>
+
     </div>
+</div>
     
     <div class="side-nav-footer">
         <p>© 2024 Uttam Hub</p>
@@ -119,7 +310,7 @@
 
 
    
-    <div id="hero-placeholder"></div>
+    
 
     <div id="hiring-placeholder"></div>
 
@@ -197,10 +388,40 @@
     
     <div id="stores-room" class="room-content hidden">
         <h2>Our Independent Stores</h2>
+
         <div class="sub-grid">
-            <a href="setbrand/resin/resincosmos.html" class="sub-item">ResinCosmos Art</a>
-            <a href="#" class="sub-item">Acrylic Hub</a>
-            <a href="#" class="sub-item">MDF Yard</a>
+        <a href="setbrand/resin/resincosmos.html" class="store-card">
+            <div class="store-img">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjM09SpkxpgIwrMY-T2RQ3fPUCMdYJOYcOJ5CdkwwBMiy8IOYTe8StmCvriS42IMewSXpVWtxEAEVrM7eq3yChS_ptOwCwKvMlo0xRSzjZDhDqiNDRPNxGyeniNZ47bGFq-pFvK16XRvGVzx7wR5YJz8cmoaEdk6yK18hH2YDDC06Vvt1HTAsPL1Qvt8Zg/w200-h200/Resin%20cosmos.png" alt="ResinCosmos">
+            </div>
+            <div class="store-info">
+                <h3>ResinCosmos Art</h3>
+                <p>Premium resin supplies, pigments, and custom handmade art pieces.</p>
+                <span class="view-store">Visit Store <i class="fas fa-arrow-right"></i></span>
+            </div>
+        </a>
+
+        <a href="setbrand/woodenbeyond/woodenbeyond.html" class="store-card">
+            <div class="store-img">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhRRGv76i7nL19dMPFa59hqKjOWDzi9OAWL3gpjk85HrW7yFnp4S4jVYmlOUmScBkTKufpI4cnN2qca0e_5iTlPJKnEgxtXY4sSkrRlNPwmj5PDIB1YaF5vK6G8SWKA4DoBgvTTjxmHTPaIIWPSNMGpP_pCsMQ3ws3NW3BBRmXV_Hefag1lykOAZIuAKAY" alt="Wooden Beyond">
+            </div>
+            <div class="store-info">
+                <h3>wooden Beyond</h3>
+                <p>for Furniture, art, fire A TO z every type wood is here just visit our store</p>
+                <span class="view-store">Visit Store <i class="fas fa-arrow-right"></i></span>
+            </div>
+        </a>
+
+        <a href="#" class="store-card">
+            <div class="store-img">
+                <img src="assets/acrylic-hub.jpg" alt="Acrylic Hub">
+            </div>
+            <div class="store-info">
+                <h3>Acrylic Hub</h3>
+                <p>High-quality acrylic sheets and customized laser-cut designs.</p>
+                <span class="view-store">Visit Store <i class="fas fa-arrow-right"></i></span>
+            </div>
+        </a>
         </div>
     </div>
 
@@ -305,7 +526,9 @@
             
         });
     </script>
-
+    <script src="storesdatabase.js"></script>
+    <script src="main.js" type="module"></script>
+    <script src="auth-handler.js" type="module"></script>
     <script src="database.js"></script>
     <script src="script.js"></script>
     <script src="cart.js"></script>
