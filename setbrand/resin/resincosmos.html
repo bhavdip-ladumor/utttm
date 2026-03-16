@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Resin Cosmos | Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="resincosmos.css">
+    
+</head>
+<body>
+
+<header class="glass-header">
+    <div class="header-inner">
+        <div class="left-group">
+            <div class="menu-btn"><i class="fas fa-bars"></i></div>
+            <div class="logo">WOODEN <span>BEYONDS</span></div>
+        </div>
+
+        <div class="right-group">
+            <div class="profile-icon" onclick="openProfile()">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="cart-icon-fixed" id="cart-btn" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count" class="badge">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-bar">
+    <i class="fas fa-search"></i>
+    <input type="text" id="productSearch" placeholder="Search wooden products...">
+    <div id="searchResults" class="search-results-dropdown" style="display:none;"></div>
+    </div>
+</header>
+    <div id="cart-placeholder"></div>
+
+    
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+<nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">RESIN<span>COSMOS</span></div>
+        <div class="close-btn" id="closeMenu"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="sidebar-links">
+    <a href="#"><i class="fas fa-home"></i> Home</a>
+
+    <a href="category/category.html?type=customized">
+        <i class="fas fa-magic"></i> Customized Items
+    </a>
+
+    <a href="javascript:void(0)" onclick="toggleMenu(); scrollToId('custom-section')">
+        <i class="fas fa-magic"></i> customise For special one 
+    </a>
+    
+    <a href="javascript:void(0)" onclick="toggleMenu(); scrollToId('store-section')">
+        <i class="fas fa-store"></i> Go to Store
+    </a>
+
+    <a href="category/category.html?type=raw"><i class="fas fa-flask"></i> Raw Materials</a>
+    <a href="category/category.html?type=molds"><i class="fas fa-shapes"></i> Molds & Tools</a>
+    <a href="category/category.html?type=pigments"><i class="fas fa-palette"></i> Pigments</a>
+    
+    
+
+    <hr>
+    <a href="https://uttamhub.com" class="external-link">Visit Uttamhub <i class="fas fa-external-link-alt"></i></a>
+</div>
+</nav>
+
+   
+
+    <main class="responsive-container">
+    
+    <section class="slider-container">
+    <div class="slider-wrapper" id="slider">
+        <div class="slide" onclick="location.href='product/product.html?id=1'">
+            <div class="slide-content">
+                <div class="p-icon"><img src="p1.jpg" alt="Product 1"></div>
+                <div class="p-info">
+                    <h2>Ocean Deep Table</h2>
+                    <p>Premium river-style finish with crystal clear resin.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide" onclick="location.href='product/product.html?id=RC02'">
+            <div class="slide-content">
+                <div class="p-icon"><img src="p2.jpg" alt="Product 2"></div>
+                <div class="p-info">
+                    <h2>Galaxy Coasters</h2>
+                    <p>A set of 4 hand-poured cosmic art pieces.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide" onclick="location.href='product/product.html?id=RC03'">
+            <div class="slide-content">
+                <div class="p-icon"><img src="p3.jpg" alt="Product 3"></div>
+                <div class="p-info">
+                    <h2>Flower Preservation</h2>
+                    <p>Keep your wedding memories alive forever.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide" onclick="location.href='product/product.html?id=RC03'">
+            <div class="slide-content">
+                <div class="p-icon"><img src="p3.jpg" alt="Product 3"></div>
+                <div class="p-info">
+                    <h2>Flower Preservation</h2>
+                    <p>Keep your wedding memories alive forever.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dots-container">
+        <span class="dot active" onclick="currentSlide(0)"></span>
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+         <span class="dot" onclick="currentSlide(3)"></span>
+    </div>
+</section>
+
+        <section class="slim-links">
+            <div class="interactive-row gold-row" onclick="scrollToId('custom-section')">
+                <div class="row-info">
+                    <h4>Customized Gifts</h4>
+                    <p>For special ones & self</p>
+                </div>
+                <div class="go-btn"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="interactive-row dark-row" onclick="scrollToId('store-section')">
+                <div class="row-info">
+                    <h4>Raw Material Store</h4>
+                    <p>Professional Art Supplies</p>
+                </div>
+                <div class="go-btn"><i class="fas fa-chevron-right"></i></div>
+            </div>
+        </section>
+
+        <section id="custom-section" class="app-section">
+            <div class="section-header">
+                <h3>Customization</h3>
+                <p>want to give special one? <br> Make it the best. <br> Give something special. 💎</p>
+            </div>
+            <button class="sticky-close" onclick="toggleLimit('custom-fold')">
+                <i class="fas fa-times"></i> Close
+            </button>
+            <div class="grid-container" id="custom-fold">
+                
+
+
+               <div class="creative-card"><img src="https://images.unsplash.com/photo-1621293306283-a4c3f5644781?q=80&w=300"><span>Gift Sets</span></div>
+            </div>
+            <button class="expand-pill" onclick="toggleLimit('custom-fold')">Show Everything</button>
+        </section>
+
+        <section id="store-section" class="app-section bg-alt">
+            <div class="section-header">
+                <h3>Visit our Store</h3>
+                <p>Pro materials for artists.</p>
+            </div>
+
+            <button class="sticky-close" onclick="toggleLimit('store-fold')">
+            <i class="fas fa-times"></i> Close
+            </button>
+            <div class="grid-container" id="store-fold">
+                
+                <a href="category/category.html?type=Raw material" class="card-link">
+                    <div class="creative-card">
+                    <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=300">
+                    <span>Preservation</span>
+                    </div>
+                </a>
+
+                <a href="category/category.html?type=raw&mustHave=resin" class="card-link">
+                    <div class="creative-card">
+                    <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=300">
+                    <span>Resin Raw Materials</span>
+                    </div>
+                </a>
+
+                <a href="category/category.html?type=mdf" class="card-link">
+                    <div class="creative-card">
+                    <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=300">
+                    <span>MDF Art</span>
+                    </div>
+                </a>
+                <a href="category/category.html?type=Raw material" class="card-link">
+                    <div class="creative-card">
+                    <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=300">
+                    <span>Preservation</span>
+                    </div>
+                </a>
+                <a href="category/category.html?type=raw&mustHave=resin" class="card-link">
+                    <div class="creative-card">
+                    <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=300">
+                    <span>all type of Raw Materials</span>
+                    </div>
+                </a>
+                <a href="category/category.html?type=Mica Powder" class="card-link">
+                    <div class="creative-card">
+                    <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=300">
+                    <span>Mica Poweder
+                    </span>
+                    </div>
+                </a>
+                <a href="category/category.html?type=Silicon Mould" class="card-link">
+                    <div class="creative-card">
+                    <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=300">
+                    <span>silicon mould 
+                    </span>
+                    </div>
+                </a>
+
+                <div class="shop-card"><img src="https://images.unsplash.com/photo-1525904097878-94fb15835963?q=80&w=300"><h5>Mica Set</h5><b>₹250</b></div>
+            </div>
+            <button class="expand-pill" onclick="toggleLimit('store-fold')">View Full Store</button>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="social-circle">
+            <a href="https://wa.me/919724362981" class="wa"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://instagram.com/resin.cosmos_" class="ig"><i class="fab fa-instagram"></i></a>
+            <a href="tel:9724362981" class="ph"><i class="fas fa-phone-alt"></i></a>
+        </div>
+        <p>A WING OF UTTAMHUB</p>
+    </footer>
+
+
+    
+    <script src="../../database.js"></script>
+    <script src="../../cart.js"></script> 
+    <script src="resincosmos.js"></script>
+</body>
+</html>

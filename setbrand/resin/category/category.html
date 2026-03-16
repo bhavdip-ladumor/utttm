@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Resin Cosmos | Category</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../resincosmos.css">
+    <link rel="stylesheet" href="category.css">
+    <link rel="stylesheet" href="../../../shopcart.css">
+    <style>
+        /* Category Specific Tweaks */
+        .category-header { display: flex; align-items: center; gap: 15px; }
+        .back-btn { font-size: 1.2rem; cursor: pointer; padding: 5px; }
+        .results-count { font-size: 0.8rem; color: #888; margin-bottom: 10px; padding: 0 20px; }
+        #category-title { text-transform: uppercase; }
+    </style>
+</head>
+<body>
+      
+    <div id="cart-placeholder"></div>
+
+
+    <header class="glass-header">
+        <div class="header-inner">
+            <div class="category-header">
+                <i class="fas fa-arrow-left back-btn" onclick="history.back()"></i>
+                <div class="logo"><span id="category-title">Loading...</span></div>
+            </div>
+            <div class="cart-pill" onclick="toggleCart()"><i class="fas fa-shopping-bag"></i><span id="cart-count">0</span></div>
+        </div>
+       <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="productSearch" placeholder="Search in this category...">
+        <div id="searchResults" class="search-results-overlay"></div>
+    </div>
+    </header>
+
+    <main class="responsive-container">
+        <div class="results-count" id="item-count"></div>
+        <section class="app-section" style="padding-top: 10px;">
+            <div class="grid-container expanded" id="category-grid">
+                </div>
+        </section>
+    </main>
+ 
+    <script src="../../../database.js"></script>
+    <script src="../../../cart.js"></script>
+    <script src="category.js"></script>
+</body>
+</html>

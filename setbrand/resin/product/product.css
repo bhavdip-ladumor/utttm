@@ -1,0 +1,1367 @@
+/* =========================================
+   1. GLOBAL STYLES & RESET
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #ffffff;
+    color: #1d1d1f;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+#loading-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #000; /* Matching your theme */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* =========================================
+   2. HEADER & GLASSMORPHISM
+   ========================================= */
+
+/* Main Header Sticky Container */
+.main-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 10px 15px;
+}
+
+/* First Row Navigation */
+.nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 50px;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Back Button Styling */
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #333;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.back-btn:active {
+    transform: scale(0.9);
+}
+
+/* Brand/Logo Name */
+.brand-logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #000;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+
+/* Cart Pill with Count */
+.cart-pill {
+    background: #000;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+#cart-count {
+    background: #ff3b30;
+    font-size: 0.75rem;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================================
+   3. SEARCH SYSTEM
+   ========================================= */
+
+/* Second Row Search */
+.search-row {
+    max-width: 1200px;
+    margin: 8px auto 4px auto;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 100%;
+    background: #f2f2f7;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    height: 44px;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.search-wrapper:focus-within {
+    border-color: #000;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.search-icon {
+    color: #8e8e93;
+    font-size: 0.9rem;
+}
+
+.search-wrapper input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 10px;
+    outline: none;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+/* Search Dropdown Results Container */
+.search-dropdown {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1001;
+}
+/* Container for the profile in the middle of the nav bar */
+.nav-center {
+    display: flex;             /* Uses flexbox to align content */
+    align-items: center;       /* Vertically centers the profile circle */
+    justify-content: center;    /* Horizontally centers the profile circle */
+    flex: 1;                   /* Takes up available space to push left and right sections apart */
+}
+
+/* The circular container for the profile image */
+.profile-circle {
+    width: 38px;               /* Fixed width for a consistent circle size */
+    height: 38px;              /* Fixed height matching the width */
+    border-radius: 50%;        /* Makes the square div a perfect circle */
+    overflow: hidden;          /* Crops the image to stay inside the circle */
+    border: 2px solid #000;    /* Adds a black border to match your brand style */
+    cursor: pointer;           /* Changes mouse to hand icon on hover */
+    transition: transform 0.2s;/* Smooth transition for the click animation */
+    background: #f2f2f7;       /* Placeholder background color while image loads */
+}
+
+/* Animation when the user clicks the profile */
+.profile-circle:active {
+    transform: scale(0.9);     /* Slightly shrinks the circle when clicked */
+}
+
+/* Ensuring the profile image fits perfectly */
+.profile-circle img {
+    width: 100%;               /* Image fills the full width of the circle */
+    height: 100%;              /* Image fills the full height of the circle */
+    object-fit: cover;         /* Prevents image stretching; crops to fit center */
+}
+
+/* Responsive adjustment for Mobile (iPhone/Android) */
+@media (max-width: 480px) {
+    .profile-circle {
+        width: 34px;           /* Slightly smaller on mobile to save space */
+        height: 34px;
+    }
+    .nav-left {
+        gap: 8px;              /* Tightens space between back button and logo */
+    }
+    .brand-logo {
+        font-size: 1.1rem;     /* Reduces logo size so it doesn't overlap center */
+    }
+}
+/* ===================================
+nav for btns
+=====================================
+/* The main bar - using Grid to force 3 equal sections */
+.product-nav {
+    display: grid;                  /* Grid layout for perfect positioning */
+    grid-template-columns: 60px 1fr 60px; /* Sides are 60px, center takes all remaining space */
+    align-items: center;            /* Center elements vertically */
+    height: 50px;                   /* Fixed height so it doesn't collapse */
+    background: #ffffff;            /* Solid white background */
+    border-bottom: 1px solid #eee;  /* Light gray line at bottom */
+    padding: 0 10px;                /* Horizontal breathing room */
+    position: sticky;               /* Stays at top */
+    top: 125.5px;                         /* Adjust this if you have a header above it */
+    z-index: 998;                   /* Sits below main header */
+}
+
+/* BOX: Left Side */
+.nav-left-box {
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* BOX: Center Side (Forces the button to middle) */
+.nav-center-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* BOX: Right Side */
+.nav-right-box {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* The actual "View More" button */
+.uttam-pill-btn {
+    background: #000000;            /* Pure black background */
+    color: #ffffff !important;      /* Force white text so it shows up */
+    text-decoration: none;          /* Remove underline */
+    font-size: 11px;                /* Small, clean font size */
+    font-weight: 800;               /* Extra bold for visibility */
+    padding: 6px 14px;              /* Space inside the pill */
+    border-radius: 20px;            /* Perfect pill shape */
+    text-transform: uppercase;      /* All caps to look professional */
+    letter-spacing: 0.5px;          /* Slight spacing for premium feel */
+    white-space: nowrap;            /* Keeps text on one line */
+    display: block;                 /* Ensures it behaves like a box */
+}
+
+/* Sidebar and Home Icon buttons */
+.menu-trigger, .home-link {
+    background: none;
+    border: none;
+    color: #333;                    /* Dark gray icons */
+    font-size: 1.2rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* Interactive feedback */
+.uttam-pill-btn:active {
+    transform: scale(0.95);         /* Slight shrink when clicked */
+    background: #333;               /* Becomes slightly lighter gray on click */
+}
+
+/* Mobile specific overrides */
+@media (max-width: 480px) {
+    .product-nav {
+        padding: 8px 12px;          /* Tighter padding on mobile */
+    }
+    
+    .uttam-btn {
+        font-size: 0.65rem;         /* Even smaller text on narrow screens */
+        padding: 5px 10px;          /* Compact button size */
+    }
+
+    .home-icon-btn span {
+        display: none;              /* Hides the word 'home', shows ONLY icon on mobile */
+    }
+}
+/* Sidebar Drawer */
+/* 1. THE MAIN SIDEBAR CONTAINER */
+.sidebar {
+    position: fixed;            /* Stays in place relative to the screen */
+    top: 0;                     /* Starts from the very top */
+    left: -300px;               /* Hidden off-screen by default (300px to the left) */
+    width: 300px;               /* Fixed width for the menu */
+    height: 100vh;              /* Full viewport height */
+    background: #ffffff;        /* Solid white background */
+    z-index: 2000;              /* Higher than the sticky headers (1000) */
+    box-shadow: 5px 0 15px rgba(0,0,0,0.1); /* Subtle shadow on the right side */
+    transition: left 0.3s ease; /* Smooth sliding animation */
+    display: flex;              /* Use flexbox to organize header and content */
+    flex-direction: column;     /* Stack content vertically */
+}
+
+/* 2. THE 'ACTIVE' STATE (When menu is toggled open) */
+.sidebar.active {
+    left: 0;                    /* Slides into view */
+}
+
+/* 3. SIDEBAR HEADER (Title and Close Button) */
+.sidebar-header {
+    padding: 20px;              /* Internal breathing room */
+    display: flex;              /* Puts Title and X on the same line */
+    justify-content: space-between; /* Pushes Title to left, X to right */
+    align-items: center;        /* Vertically centers the text and button */
+    border-bottom: 2px solid #f9f9f9; /* Thick light line for separation */
+    background: #000;           /* Black header for a premium look */
+    color: #fff;                /* White text for contrast */
+}
+
+.sidebar-header h3 {
+    margin: 0;                  /* Removes default heading margins */
+    font-size: 1.2rem;          /* Professional font size */
+    text-transform: uppercase;  /* All caps style */
+    letter-spacing: 1px;        /* Spacing between letters */
+}
+
+/* 4. THE CLOSE (X) BUTTON */
+.close-btn {
+    background: none;           /* No background box */
+    border: none;               /* No border */
+    color: #fff;                /* White color to match header text */
+    font-size: 2rem;            /* Large X for easy tapping */
+    cursor: pointer;            /* Hand cursor on hover */
+    line-height: 1;             /* Centers the X vertically */
+}
+
+/* 5. SIDEBAR CONTENT SCROLL AREA */
+#sidebar-content {
+    flex: 1;                    /* Takes up remaining height */
+    overflow-y: auto;           /* Allows scrolling if category list is long */
+    padding-top: 10px;          /* Small gap at the top */
+}
+
+/* 6. DYNAMIC CATEGORY ITEMS (Injected by JS) */
+.sidebar-cat-item {
+    padding: 15px 20px;         /* Vertical and horizontal spacing */
+    border-bottom: 1px solid #f0f0f0; /* Light line between categories */
+}
+
+.sidebar-cat-title {
+    font-weight: 800;           /* Extra bold for the main category name */
+    color: #000;                /* Pure black */
+    margin-bottom: 8px;         /* Space before the sub-list starts */
+    display: block;             /* Ensures it takes its own line */
+    font-size: 0.95rem;         /* Slightly smaller but bold */
+    text-transform: capitalize; /* Ensures proper naming format */
+}
+
+/* 7. SUB-CATEGORY LISTS */
+.sidebar-sub-list {
+    padding-left: 10px;         /* Indents the sub-items to show hierarchy */
+    list-style: none;           /* Removes default bullet points */
+    margin: 0;                  /* Resets margins */
+}
+
+.sidebar-sub-list li a {
+    text-decoration: none;      /* Removes link underlines */
+    color: #555;                /* Medium gray for sub-items */
+    font-size: 0.85rem;         /* Smaller font for sub-categories */
+    display: block;             /* Makes the whole line clickable */
+    padding: 6px 0;             /* Vertical space for finger-tapping on mobile */
+    transition: color 0.2s;     /* Smooth color change on hover */
+}
+
+/* Interaction: Hover/Active State for links */
+.sidebar-sub-list li a:hover, 
+.sidebar-sub-list li a:active {
+    color: #000;                /* Turns black when hovered or tapped */
+    font-weight: 600;           /* Becomes slightly thicker */
+}
+
+/* 8. OVERLAY (Darkens the background when menu is open) */
+#sidebar-overlay {
+    position: fixed;            /* Covers the whole screen */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.4); /* Semi-transparent black */
+    display: none;              /* Hidden by default */
+    z-index: 1999;              /* Just below the sidebar */
+}
+
+#sidebar-overlay.active {
+    display: block;             /* Shows when sidebar is active */
+}
+/* =========================================
+   4. PRODUCT GALLERY (MOBILE FIRST)
+   ========================================= */
+
+/* Main Gallery Wrapper */
+
+.product-gallery {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Main Display Image Container */
+.main-image-container {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f9f9f9;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 0.3s ease;
+}
+
+/* Floating Discount Badge */
+.img-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #ff3b30;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    display: none;
+}
+
+/* Floating Share Button (Top Left) */
+.img-share-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px; /* Positioned in top-left */
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    color: #333;
+    transition: transform 0.2s ease;
+}
+
+.img-share-btn:hover {
+    transform: scale(1.1);
+    background: #ffffff;
+}
+
+/* Thumbnail Horizontal Scroll for Mobile */
+.thumbnail-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.thumbnail-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.thumb-scroll-container {
+    display: flex;
+    gap: 12px;
+    padding: 5px 2px;
+}
+
+/* Thumbnail Individual Style */
+.thumb-scroll-container img {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    background: #f2f2f7;
+    flex-shrink: 0;
+}
+
+/* Active Highlight for Thumbnails */
+.thumb-scroll-container img.active {
+    border-color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* =========================================
+   5. RESPONSIVE ADJUSTMENTS (DESKTOP/TV)
+   ========================================= */
+
+@media (min-width: 1024px) {
+    /* Balance Header Padding */
+    .nav-row, .search-row { 
+        padding: 0 20px; 
+    }
+    
+    .brand-logo { 
+        font-size: 1.6rem; 
+    }
+
+    /* Fixed Desktop Gallery Alignment */
+    .product-gallery {
+        flex-direction: row; 
+        align-items: flex-start;
+        justify-content: center; /* Center horizontally */
+        gap: 30px;
+        padding: 40px 20px;
+    }
+    
+    /* Constraint for Main Image to avoid side gaps */
+    .main-image-container {
+        flex: 0 1 550px; /* Base size of 550px, can shrink but not bloat */
+        width: 550px;
+        margin: 0;
+    }
+
+    /* Vertical Thumbnails for Desktop */
+    .thumb-scroll-container {
+        flex-direction: column;
+        order: -1; /* Thumbs move to the left */
+        width: 90px;
+        gap: 15px;
+    }
+
+    .thumb-scroll-container img {
+        width: 85px;
+        height: 85px;
+    }
+}
+
+/* Details Container */
+.product-details {
+    padding: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.brand-badge {
+    color: #8e8e93;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.product-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 15px;
+}
+.product-tagline {
+    font-size: 1.3rem;
+    color: #000000;
+    margin-top: -5px; /* Pulls it closer to the title */
+    margin-bottom: 15px;
+    /* font-style: italic; */
+    font-weight: 400;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .product-tagline {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+}
+/* Pricing Row */
+.stock-status-container {
+    margin: 10px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Green for healthy stock */
+.in-stock {
+    color: #28a745;
+}
+
+/* Red/Orange for low stock (Urgency!) */
+.low-stock {
+    color: #e67e22;
+    animation: blink 1.5s infinite; /* Makes it grab attention */
+}
+
+/* Grey for out of stock */
+.out-of-stock {
+    color: #dc3545;
+}
+
+@keyframes blink {
+    50% { opacity: 0.7; }
+}
+.price-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.sale-price {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #000;
+}
+
+.mrp-price {
+    font-size: 1.1rem;
+    color: #8e8e93;
+    text-decoration: line-through;
+}
+
+.discount-percent {
+    background: #e5ffed;
+    color: #28a745;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* Container for the whole variant area */
+.chip-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Individual row for each attribute (e.g., one for Width, one for Size) */
+.variant-row {
+    display: flex;
+    flex-direction: column; /* Label on top, chips below */
+    gap: 10px;
+}
+
+/* The Label (e.g., SELECT WIDTH:) */
+.variant-label {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #222; /* Darker like your image */
+    text-transform: uppercase;
+}
+
+/* Group of chips */
+.chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Individual Chip Styling */
+.variant-chip {
+    padding: 10px 22px; /* Thicker chips */
+    border: 1px solid #eee;
+    border-radius: 12px; /* More rounded */
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s ease;
+    /* This shadow creates the "lifted" look from your image */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Active Selection - Dark Blue-Grey style */
+.variant-chip.active {
+    background: #34495e; /* The dark color from your screenshot */
+    color: #fff;
+    border-color: #34495e;
+    box-shadow: 0 4px 10px rgba(52, 73, 94, 0.3);
+}
+/* Disabled State */
+.variant-chip.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #f5f5f5;
+    border-color: #ddd;
+    color: #aaa;
+    pointer-events: none; /* Prevents clicking */
+    box-shadow: none;
+}
+
+/* Desktop Adjustment: Give more room on large screens */
+@media (min-width: 1024px) {
+    .variant-row {
+        gap: 20px;
+    }
+    .variant-label {
+        min-width: 80px;
+    }
+}
+
+/* Delivery Info */
+.delivery-info {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #3a3a3c;
+    margin-bottom: 8px;
+}
+
+.info-item i { color: #28a745; }
+
+/* Action Buttons */
+/* CTA Buttons Container */
+.cta-buttons {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+    margin-top: 25px;
+    width: 100%;
+}
+
+/* Base style for both buttons */
+.btn-cart, .btn-whatsapp {
+    flex: 1; /* Makes both buttons equal width */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px 10px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    white-space: nowrap; /* Prevents text from breaking into 2 lines */
+}
+
+/* Add to Cart Button */
+.btn-cart {
+    background: #000;
+    color: #fff;
+}
+
+.btn-cart:hover {
+    background: #333;
+}
+
+/* WhatsApp Button */
+.btn-whatsapp {
+    background: #25d366;
+    color: #fff;
+}
+
+.btn-whatsapp:hover {
+    background: #1eb956;
+}
+
+/* Active State (Click effect) */
+.btn-cart:active, .btn-whatsapp:active {
+    transform: scale(0.96);
+}
+
+/* Small Screen Optimization */
+@media (max-width: 380px) {
+    .btn-cart, .btn-whatsapp {
+        font-size: 0.8rem; /* Slightly smaller text for very narrow phones */
+        padding: 14px 5px;
+    }
+}
+/* Desktop Grid Support */
+@media (min-width: 1024px) {
+    main {
+        display: flex;
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: 40px;
+        padding-top: 30px;
+    }
+    .product-details { flex: 1; padding: 0; }
+    .product-gallery { flex: 1.2; }
+}
+/* Compact Info Wrapper */
+.product-info-wrapper {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Reduced gap between blocks */
+    padding: 0 10px;
+}
+
+/* Slimmed Section Containers */
+.info-section {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 12px; /* Tight padding */
+}
+
+/* Small, Bold Titles */
+.info-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #000;
+    text-transform: uppercase;
+    display: block;
+    letter-spacing: 0.3px;
+}
+
+/* Condensed Description */
+.description-text {
+    font-size: 0.88rem;
+    line-height: 1.4;
+    color: #555;
+    margin: 0;
+}
+
+/* Tablet/Desktop: Show side-by-side to save vertical scroll */
+@media (min-width: 768px) {
+    .product-info-wrapper {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+   
+}
+
+.details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-line {
+    font-size: 0.88rem;
+    line-height: 1.4;
+    color: #444;
+}
+
+.detail-line strong {
+    color: #000;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.detail-line span {
+    color: #555;
+    margin-left: 2px;
+}
+
+/* Optional: Add a small bullet point effect */
+.detail-line::before {
+    content: "•";
+    color: #28a745; /* Brand Green color */
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+/* The Grid Container */
+.specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Exactly 2 columns on mobile */
+    gap: 8px; /* Small gap between items */
+    border-top: 1px solid #f0f0f0;
+    padding-top: 10px;
+}
+
+/* Individual Spec Box */
+.spec-item {
+    display: flex;
+    flex-direction: column; /* Label on top of Value */
+    padding: 6px;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+.spec-item span {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.spec-item strong {
+    font-size: 0.8rem;
+    color: #222;
+    white-space: nowrap; /* Prevents text from breaking into two lines */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds ... if text is too long for the half-width */
+}
+
+/* Tablet/Desktop/TV Views: Increase to 4 columns to save even more vertical space */
+@media (min-width: 768px) {
+    .specs-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Container height management */
+.collapsible-wrapper {
+    position: relative;
+    max-height: 80px; /* Small height to show just a tiny bit */
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+/* Expanded state */
+.collapsible-wrapper.open {
+    max-height: 1000px; /* High enough for full content */
+}
+
+/* The subtle fade effect to attract clicks */
+.fade-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(transparent, #ffffff);
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.collapsible-wrapper.open .fade-overlay {
+    opacity: 0;
+}
+
+/* The Button Styling */
+.mini-toggle-btn {
+    background: none;
+    border: none;
+    color: #007bff; /* Link blue or your brand color */
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 5px 0;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* Tablet/Desktop: Show side-by-side to save vertical scroll */
+@media (min-width: 768px) {
+    .product-info-wrapper {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+   
+}
+/* 1. Main Section Container */
+.similar-products {
+    padding: 40px 15px;
+    background: #fff;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* 2. Section Title */
+.similar-products .section-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+    text-align: left; /* Aligned left for a clean vertical start */
+}
+
+/* 3. The Grid Layout (Mobile: 2 Columns, Vertical) */
+.similar-grid {
+    display: grid;
+    /* This creates 2 equal columns that flow downwards */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 15px; /* Space between cards both horizontally and vertically */
+    padding: 10px 0;
+}
+
+/* 4. The Individual Card */
+.similar-card {
+    /* No longer need flex-basis or min-width because Grid handles it */
+    width: 100%; 
+    background: #fff;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    transition: transform 0.2s ease;
+}
+
+/* 5. Image Wrapper */
+.similar-card .card-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1; /* Keeps image perfectly square */
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+/* 6. The Product Image */
+.similar-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+/* 7. Free Delivery Badge */
+.similar-card .free-delivery-tag {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: #000;
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    z-index: 1;
+}
+
+/* 8. Card Info Container */
+.similar-card .card-info {
+    text-align: center;
+    flex-grow: 1; /* Pushes buttons to the bottom if titles vary in length */
+}
+
+/* 9. Product Title */
+.similar-card h5 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 5px 0 2px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Shows max 2 lines then adds "..." */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.2;
+}
+
+/* 10. Brand Label */
+.similar-card .brand-name {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: #999;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+/* 11. Price Row */
+.similar-card .price-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.similar-card .sale {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #000;
+}
+
+.similar-card .mrp {
+    font-size: 0.75rem;
+    color: #bbb;
+    text-decoration: line-through;
+}
+
+/* 12. Button Container */
+.similar-card .card-buttons {
+    display: flex;
+    gap: 4px;
+    margin-top: auto; /* Aligns buttons at the bottom */
+}
+
+/* 13. Action Button Style */
+.similar-card .action-btn {
+    flex: 1;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.similar-card .action-btn:active {
+    transform: scale(0.95);
+}
+
+/* 14. Add to Cart (Black) */
+.similar-card .add-cart-btn {
+    background: #111;
+    color: #fff;
+}
+
+/* 15. WhatsApp Inquiry (Green) */
+.similar-card .wp-btn {
+    background: #25D366;
+    color: #fff;
+}
+
+/* 16. Desktop View (Vertical 4 Columns) */
+@media (min-width: 1024px) {
+    .similar-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 items per row on PC */
+        gap: 25px;
+    }
+    
+    .similar-card {
+        padding: 15px;
+    }
+
+    .similar-card h5 {
+        font-size: 1rem;
+    }
+
+    .similar-card .action-btn {
+        height: 38px;
+        font-size: 0.8rem;
+    }
+}
+
+/* 1. Container for Tag Rows */
+.tag-row-section {
+    padding: 25px 0;
+    background: #fff;
+    border-bottom: 6px solid #f4f4f4;
+}
+
+/* 2. Specific Title for these rows */
+.tag-row-title {
+    padding: 0 15px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #222;
+    margin-bottom: 15px;
+}
+
+/* 3. Horizontal Scroll Container */
+.tag-grid-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 0 15px 15px;
+    scrollbar-width: none;
+}
+
+.tag-grid-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* 4. The Card (Unique Class) */
+.tag-card {
+    flex: 0 0 160px; /* Fixed width for horizontal scrolling */
+    background: #fff;
+    border-radius: 12px;
+    padding: 8px;
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+}
+
+.tag-card .card-img-wrap img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.tag-card h5 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin: 8px 0 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.tag-card .price-box {
+    margin-bottom: 10px;
+}
+
+.tag-card .sale {
+    font-weight: 800;
+    font-size: 0.9rem;
+}
+
+.tag-card .mrp {
+    font-size: 0.7rem;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 5px;
+}
+
+/* 5. Smaller buttons for scrollable cards */
+.tag-card .card-buttons {
+    display: flex;
+    gap: 4px;
+    margin-top: auto;
+}
+
+.tag-card .action-btn {
+    flex: 1;
+    padding: 6px 0;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 6px;
+    text-align: center;
+    border: none;
+    text-decoration: none;
+}
+
+.tag-card .add-cart-btn { background: #000; color: #fff; }
+.tag-card .wp-btn { background: #25D366; color: #fff; }
+
+
+/* Section Container */
+.tag-row-section {
+    padding: 20px 0;
+    background: #fff;
+    border-bottom: 8px solid #f9f9f9;
+}
+
+/* Row Title */
+.tag-row-title {
+    padding: 0 15px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #000;
+}
+
+/* Horizontal Scroll wrapper */
+.tag-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 0 15px 15px;
+    scrollbar-width: none;
+}
+
+.tag-scroll-container::-webkit-scrollbar { display: none; }
+
+/* The Mini Card */
+.tag-card {
+    flex: 0 0 160px; /* Fixed width for horizontal scrolling */
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px;
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+}
+
+.tag-card-img img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.tag-card-info h5 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin: 8px 0 4px;
+    height: 32px; /* Keeps titles aligned */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.tag-price {
+    margin-bottom: 10px;
+}
+
+.tag-price .sale { font-weight: 800; font-size: 0.95rem; }
+.tag-price .mrp { font-size: 0.75rem; color: #999; text-decoration: line-through; margin-left: 4px; }
+
+/* Action Buttons */
+.tag-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.tag-btn-add, .tag-btn-wp {
+    flex: 1;
+    height: 30px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    border-radius: 6px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.tag-btn-add { background: #000; color: #fff; }
+.tag-btn-wp { background: #25D366; color: #fff; }
+.tag-scroll-container {
+    display: flex;
+    flex-wrap: nowrap; /* Critical for horizontal scroll */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scroll on mobile */
+    gap: 15px;
+    padding: 10px 15px;
+}
