@@ -27,7 +27,7 @@ function initPromoSlider() {
         // FIXED: Using product.images[0] to match your new database structure
         track.innerHTML = products.map(product => `
             <div class="promo-card">
-                <a href="product.html?id=${product.id}" class="promo-image-wrapper">
+                <a href="setbrand/resin/product/product.html?id=${product.id}" class="promo-image-wrapper">
                     <img src="${product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/150?text=No+Image'}" 
                          alt="${product.name}" 
                          onerror="this.onerror=null;this.src='https://via.placeholder.com/150?text=Broken+Link';">
