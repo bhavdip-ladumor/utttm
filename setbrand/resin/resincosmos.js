@@ -1,6 +1,5 @@
 /**
  * RESIN COSMOS - Master Script
- * Includes: Sidebar, Unique Search, Auto-Slider, Hero Live, and UI Helpers
  * Location: root/resincosmos.js
  */
 
@@ -38,7 +37,6 @@ function initSearch() {
             return;
         }
 
-        // Use a Map to prevent duplicate IDs in results
         const uniqueMatches = new Map();
 
         allProducts.forEach(p => {
@@ -47,13 +45,12 @@ function initSearch() {
             const sku = p.id ? String(p.id).toLowerCase() : "";
             const tags = p.tagweb ? p.tagweb.toLowerCase() : "";
 
-            // Filtering for resin-specific tags and matching query
-            const isResin = tags.includes('resin');
-            const matchesQuery = name.includes(query) || 
-                                 category.includes(query) || 
-                                 sku.includes(query);
+                    const isResin = tags.includes('resin');
+const matchesQuery = name.includes(query) || 
+                     category.includes(query) || 
+                     sku.includes(query);
 
-            if (isResin && matchesQuery) {
+if (isResin && matchesQuery) { // <--- This 'isResin' is the problem
                 if (!uniqueMatches.has(p.id)) {
                     uniqueMatches.set(p.id, p);
                 }
@@ -115,12 +112,8 @@ function initSlider() {
         if (dots[index]) dots[index].classList.add('active');
     }
 
-    // Auto Animation (2 seconds)
-    autoSlide = setInterval(() => {
-        showSlide(index + 1);
-    }, 2000);
+    autoSlide = setInterval(() => { showSlide(index + 1); }, 2000);
 
-    // Swipe Support
     let startX = 0;
     slider.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
@@ -131,13 +124,9 @@ function initSlider() {
         let endX = e.changedTouches[0].clientX;
         if (startX - endX > 50) showSlide(index + 1); 
         if (startX - endX < -50) showSlide(index - 1); 
-        
-        autoSlide = setInterval(() => {
-            showSlide(index + 1);
-        }, 2000);
+        autoSlide = setInterval(() => { showSlide(index + 1); }, 2000);
     });
 
-    // Manual Dot Navigation
     dots.forEach((dot, i) => {
         dot.addEventListener('click', () => {
             clearInterval(autoSlide);
@@ -149,41 +138,13 @@ function initSlider() {
 
 window.currentSlide = function(n) {
     const dots = document.querySelectorAll('.dot');
-    if(dots[n]) dots[n].click();
+    if(dots[n]) {
+        // Force click the dot to trigger the slider logic
+        dots[n].dispatchEvent(new Event('click'));
+    }
 };
 
-// --- 4. HERO LIVE SLIDER LOGIC ---
-// --- 4. HERO CLOCK LOGIC ---
-/**
- * Targets a specific Clock product for the Hero visual
- */
-function initHeroClock() {
-    const heroImg = document.getElementById('hero-img');
-    const heroIdTag = document.getElementById('hero-id-tag');
-    const heroNameTag = document.getElementById('hero-name-tag');
-    const heroLink = document.getElementById('hero-link');
 
-    if (!heroImg || !window.allProducts) return;
-
-    // FIND YOUR CLOCK: Change "15" to your actual Clock product ID
-    const clockProduct = window.allProducts.find(p => String(p.id) === "15") || 
-                         window.allProducts.find(p => p.category?.toLowerCase().includes('clock'));
-
-    if (clockProduct) {
-        // Update Content
-        heroImg.src = clockProduct.images[0];
-        if (heroIdTag) heroIdTag.innerText = `ID: ${clockProduct.id}`;
-        if (heroNameTag) heroNameTag.innerText = clockProduct.name;
-        
-        // Direct Link to the Clock product page
-        if (heroLink) {
-            heroLink.href = `setbrand/resin/product/product.html?id=${clockProduct.id}`;
-        }
-    }
-}
-
-// Ensure it runs when database is ready
-window.addEventListener('db_ready', initHeroClock);
 
 // --- 5. UI HELPERS & TOUCH FEEDBACK ---
 
@@ -220,8 +181,7 @@ window.addEventListener('DOMContentLoaded', () => {
     initSearch();
 });
 
-// Trigger Hero and Search Re-init when Database is ready
 window.addEventListener('db_ready', () => {
     initSearch();
-    startHeroLiveSlider();
+    
 });
