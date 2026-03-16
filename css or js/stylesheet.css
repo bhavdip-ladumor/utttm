@@ -1,74 +1,888 @@
-/* Container for the live results */
+/* Main Section Background */
+.hero-search-section {
+    background: #1a242f; /* Dark Navy from your image */
+    padding: 60px 5% 40px;
+    text-align: center;
+    position: relative;
+    color: white;
+}
+
+/* Header & Menu Button Styling */
+.hero-header-top {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.menu-btn {
+    background: #007bff; /* Blue button */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* Typography */
+.hero-title {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+.hero-title span { color: #f3a847; } /* Orange text */
+
+/* The Search Box Container */
+.main-search-box {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.search-input-wrapper {
+    display: flex;
+    background: white;
+    border-radius: 8px; /* Sharp rounded corners from image */
+    overflow: hidden;
+    height: 55px;
+}
+
+.search-input-wrapper input {
+    flex: 1;
+    border: none;
+    padding: 0 20px;
+    font-size: 1.1rem;
+    outline: none;
+    color: #333;
+}
+
+/* The Orange Search Button */
+.search-btn {
+    background: #f3a847; /* Match image exactly */
+    border: none;
+    width: 80px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.search-btn:hover { background: #e09636; }
+
+/* Service Tags Styling */
+.service-info-tags {
+    margin-top: 30px;
+    font-size: 0.95rem;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    opacity: 0.9;
+}
+
+.tag-icon { margin-right: 5px; }
+.dot { color: #f3a847; margin: 0 5px; }
+
+/* The Dropdown Container */
 .live-search-dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 5px);
     left: 0;
     width: 100%;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-top: none;
-    border-radius: 0 0 10px 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    z-index: 2000;
-    
-    /* Horizontal Layout Logic */
-    display: none; 
-    flex-direction: row;
-    overflow-x: auto; /* Enable side scrolling */
-    padding: 10px;
-    gap: 15px;
-    white-space: nowrap; /* Prevents items from wrapping to next line */
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 9999;
+    display: none; /* Hidden by default */
+    max-height: 450px; /* Limits height */
+    overflow-y: auto; /* VERTICAL SCROLL ENABLED */
+    text-align: left;
 }
 
-/* Individual Product Item in the horizontal line */
-.live-item {
-    display: inline-flex;
-    flex-direction: column; /* Image on top, text below */
+.live-search-dropdown.active {
+    display: block;
+}
+
+/* Section Labels */
+.smart-search-label {
+    padding: 15px 15px 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #a0a0a0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Store Card Style */
+.smart-store-card {
+    display: flex;
     align-items: center;
-    min-width: 120px; /* Fixed width for each item */
-    max-width: 120px;
+    padding: 16px;
+    margin: 8px 12px;
+    background: linear-gradient(to right, #ffffff, #fffdf5); /* Subtle gold gradient */
+    border: 1px solid #f0e6cc;
+    border-radius: 14px;
     cursor: pointer;
-    transition: transform 0.2s;
-    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.live-item:hover {
-    transform: translateY(-3px);
+.smart-store-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(243, 168, 71, 0.15); /* Orange/Gold glow */
+    border-color: #f3a847;
 }
 
-.live-item img {
-    width: 80px;
-    height: 80px;
+.smart-store-img {
+    width: 65px;
+    height: 65px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-right: 18px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.smart-store-info h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.smart-store-tag {
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: #f3a847;
+    background: rgba(243, 168, 71, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.smart-store-info p {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.3;
+}
+
+.smart-prod-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 18px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.smart-prod-row:hover {
+    background: #fcfcfc;
+}
+
+.smart-prod-img {
+    width: 48px;
+    height: 48px;
     border-radius: 8px;
     object-fit: cover;
-    margin-bottom: 8px;
+    margin-right: 15px;
     border: 1px solid #eee;
 }
 
-.live-item-info h4 {
-    margin: 0;
-    font-size: 0.8rem;
+.smart-prod-details .name {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
     color: #333;
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis; /* Adds "..." if name is too long */
-    white-space: nowrap;
 }
 
-.live-item-info p {
-    margin: 2px 0 0;
-    font-size: 0.85rem;
-    color: #27ae60;
-    font-weight: bold;
+/* Badge for variants in search results */
+.variant-badge {
+    font-size: 10px;
+    background: #eef2ff; /* Light blue/indigo tint */
+    color: #4f46e5;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: 1px solid #c7d2fe;
 }
 
-/* Custom scrollbar for a cleaner look */
+/* Ensure price line handles the badge well */
+.price-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.old-price {
+    font-size: 0.8rem;
+    color: #aaa;
+    text-decoration: line-through;
+    margin-right: 6px;
+    font-weight: 400;
+}
+.sale-price {
+    color: #e67e22; /* High-visibility orange */
+    font-weight: 800;
+}
+
+.no-results-box {
+    padding: 50px 20px;
+    text-align: center;
+    color: #999;
+    font-size: 0.95rem;
+}
+
+/* Scrollbar Styling */
 .live-search-dropdown::-webkit-scrollbar {
-    height: 6px;
+    width: 8px;
 }
 .live-search-dropdown::-webkit-scrollbar-thumb {
-    background: #ccc;
+    background: #d1d1d1;
     border-radius: 10px;
+}
+
+
+/* The background portal that covers the screen */
+/* The Full Screen Wrapper */
+.search-portal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff; /* Clean white background for results */
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+}
+
+/* The header stays fixed at the top */
+.search-portal-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+    background: white;
+}
+
+/* THE SCROLLABLE RESULTS AREA */
+.portal-results-container {
+    flex: 1;                /* Takes up all remaining space */
+    overflow-y: auto;       /* Allows scrolling for many products */
+    padding: 15px;
+    background: #fcfcfc;    /* Slightly off-white for contrast */
+    -webkit-overflow-scrolling: touch; /* Smooth scroll on iPhones */
+}
+
+/* Scrollbar styling for the results list */
+.portal-results-container::-webkit-scrollbar {
+    width: 6px;
+}
+.portal-results-container::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 10px;
+}
+
+/* Back Button inside portal */
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    padding: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    color: #333;
+}
+/* --- TOP BAR & PROFILE NAV --- */
+/* The main container holding Menu and Sign-In */
+.top-bar-controls {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 100%; /* Spans full width */
+    padding: 0 5%; /* Adds breathing room on sides */
+    display: flex;
+    justify-content: space-between; /* Pushes Menu Left, Auth Right */
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Container holding the Sign In button/Profile */
+#auth-container {
+    display: flex;
+    justify-content: flex-end; /* Ensures content stays right */
+    align-items: center;
+}
+/* The Sign In Button */
+.btn-login-trigger {
+    background-color: #febd69; /* Amazon-style orange */
+    color: #111;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-login-trigger:hover {
+    background-color: #f3a847;
+}
+
+
+
+/* --- GOOGLE LOGIN BUTTON --- */
+.btn-google {
+    width: 100%; /* Spans full width of the modal card */
+    display: flex; /* Aligns logo and text in a row */
+    align-items: center; /* Centers items vertically */
+    justify-content: center; /* Centers items horizontally */
+    gap: 12px; /* Space between Google G logo and text */
+    padding: 12px; /* Comfortable clicking area */
+    background-color: #ffffff; /* White background per Google branding */
+    color: #3c4043; /* Google's dark grey text color */
+    border: 1px solid #dadce0; /* Subtle border */
+    border-radius: 6px; /* Smooth corners */
+    font-size: 1rem; /* Standard readable text size */
+    font-weight: 500; /* Medium weight for text */
+    cursor: pointer; /* Hand icon on hover */
+    transition: background-color 0.2s, box-shadow 0.2s; /* Smooth hover transition */
+    margin-top: 15px; /* Space from the "OR" divider */
+}
+
+.btn-google:hover {
+    background-color: #f8f9fa; /* Very light grey on hover */
+    box-shadow: 0 1px 3px rgba(60,64,67,0.3); /* Subtle lift effect */
+}
+
+/* Ensure the Google Icon keeps its proportions */
+.btn-google img {
+    display: block;
+    user-select: none;
+}
+
+/* --- CANCEL BUTTON --- */
+.btn-close {
+    width: 100%; /* Match width of other buttons */
+    background: none; /* No background box */
+    border: none; /* No border */
+    padding: 12px;
+    margin-top: 10px; /* Space below Google button */
+    color: #5f6368; /* Muted grey color */
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: underline; /* Visual cue that it's a secondary action */
+    transition: color 0.2s;
+}
+
+.btn-close:hover {
+    color: #202124; /* Darkens text on hover */
+}
+
+/* --- DROPDOWN LINKS (My Profile & My Orders) --- */
+.drop-item {
+    display: block;            /* Makes the entire row clickable */
+    padding: 12px 16px;        /* Comfortable spacing for touch and mouse */
+    color: #333;               /* Dark grey text for readability */
+    text-decoration: none;     /* Removes the default blue underline */
+    font-size: 0.95rem;        /* Slightly smaller than main titles */
+    transition: background 0.2s; /* Smooth transition for hover effect */
+    border-radius: 4px;        /* Slight rounding on the hover box */
+}
+
+.drop-item:hover {
+    background-color: #f5f5f5; /* Light grey background on hover */
+    color: #007bff;            /* Change text color to primary blue on hover */
+}
+
+/* --- LOGOUT BUTTON --- */
+.btn-logout {
+    width: 100%;               /* Matches the width of the dropdown */
+    text-align: center;          /* Aligns text with the links above */
+    background: none;          /* Removes default button grey background */
+    border: none;              /* Removes default button border */
+    padding: 12px 16px;        /* Matches padding of .drop-item exactly */
+    margin-top: 8px;           /* Small gap after the links */
+    color: #d9534f;            /* Bootstrap-style red for "Danger/Sign Out" actions */
+    font-size: 0.95rem;        /* Matches the link font size */
+    font-weight: 600;          /* Makes it bold to stand out as an action */
+    cursor: pointer;           /* Hand icon to show it's clickable */
+    border-top: 1px solid #eee; /* Adds a thin separator line above logout */
+    transition: all 0.2s;      /* Smooth hover transition */
+}
+
+.btn-logout:hover {
+    background-color: #fff5f5; /* Very light red tint on hover */
+    color: #c9302c;            /* Darker red on hover */
+}
+
+/* Profile Wrapper (The area that holds pic and name) */
+.profile-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative; /* Needed for dropdown positioning */
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* The small "Hello, Name" text */
+.user-meta {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    color: white;
+}
+
+.user-meta small { font-size: 11px; opacity: 0.8; }
+.user-meta span { font-size: 14px; font-weight: bold; }
+
+/* The Circle Profile Pic */
+.profile-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #febd69;
+}
+
+/* Dropdown Menu (Hidden by default) */
+.profile-dropdown {
+    display: none; 
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 15px;
+    z-index: 1000;
+}
+
+/* Show dropdown on hover */
+.profile-wrapper:hover .profile-dropdown {
+    display: block;
+}
+
+/* Modal Background Overlay */
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px); /* Modern blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* The White Card inside Modal */
+.modal-card {
+    background: white;
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    position: relative;
+}
+
+/* Tab buttons (Login/Signup) */
+.auth-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.auth-tabs button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: #666;
+}
+
+.auth-tabs button.active {
+    color: #131921;
+    border-bottom: 3px solid #febd69;
+}
+
+/* Inputs & Buttons */
+.auth-form input, .auth-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: #131921;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* The Section Itself */
+/* --- 1. FULL SCREEN SECTION --- */
+#profile-page {
+    position: fixed;            /* Sits on top of the home content */
+    inset: 0;                   /* Covers top, left, right, bottom: 0 */
+    background: #f4f7f9;        /* Light neutral background */
+    z-index: 2000;              /* Higher than header/hero */
+    overflow-y: auto;           /* Scrollable if content is long */
+}
+
+/* Hide helper */
+#profile-page.hidden {
+    display: none;
+}
+
+/* --- 2. MAIN CONTAINER --- */
+.profile-container {
+    display: flex;              /* Side-by-side layout for Desktop */
+    max-width: 1200px;
+    min-height: 100vh;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+/* --- 3. SIDEBAR STYLING --- */
+.profile-sidebar {
+    width: 280px;               /* Fixed width sidebar */
+    background: #ffffff;
+    border-right: 1px solid #eee;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-user {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.sidebar-user img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #febd69;  /* Amazon-style orange border */
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.sidebar-user h3 {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* Navigation Buttons */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar-nav button {
+    width: 100%;
+    text-align: left;
+    padding: 12px 15px;
+    border: none;
+    background: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.sidebar-nav button:hover {
+    background: #f0f0f0;
+}
+
+.sidebar-nav button.active {
+    background: #131921;        /* Dark blue/black active state */
+    color: white;
+}
+
+/* Container for the icon in side-nav */
+.nav-icon {
+    width: 35px; /* Fixed width ensures text starts at same spot */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+/* Adjust FontAwesome specifically if needed */
+.nav-icon i {
+    font-size: 1rem;
+    color: #555;
+}
+
+.nav-divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 15px 10px;
+}
+
+.nav-label {
+    padding-left: 18px;
+    font-size: 0.7rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+#p-logout {
+    color: #d9534f;             /* Danger red for logout */
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    border-radius: 0;
+}
+
+/* --- 4. CONTENT AREA & FORM --- */
+.profile-content {
+    flex: 1;                    /* Takes up remaining space */
+    padding: 50px;
+}
+
+.profile-content h2 {
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+    color: #131921;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #555;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+/* Rows for Name and City/Pin */
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row input {
+    flex: 1;                    /* Inputs share row space equally */
+}
+
+/* Input Fields Styling */
+input[type="text"],
+input[type="tel"],
+input[type="email"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #fafafa;
+}
+
+input:focus {
+    border-color: #febd69;
+    outline: none;
+    background: #fff;
+}
+
+/* Save Changes Button */
+.btn-primary {
+    background: #febd69;
+    color: #111;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    background: #f3a847;
+}
+
+/* --- 5. RESPONSIVE DESIGN --- */
+
+/* Tablet & Large Mobile */
+@media (max-width: 900px) {
+    .profile-container {
+        flex-direction: column; /* Stack sidebar on top */
+    }
+    .profile-sidebar {
+        width: 100%;
+        padding: 20px;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+    }
+    .profile-content {
+        padding: 30px 20px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .form-row {
+        flex-direction: column; /* Stack first/last name inputs */
+        gap: 0;
+    }
+    .profile-content h2 {
+        font-size: 1.4rem;
+    }
+}
+
+/* --- RE-AUTH MODAL SPECIFIC STYLING --- */
+
+/* Inherits .modal background from previous code, but we refine the card */
+.security-card {
+    max-width: 350px;           /* Slimmer than the login modal for a focused feel */
+    text-align: center;         /* Centers the text and inputs */
+    padding: 40px 30px;         /* Extra vertical padding for a clean look */
+    border-top: 5px solid #febd69; /* Accent border to signal importance */
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3); /* Deeper shadow for depth */
+}
+
+.security-card h3 {
+    margin-bottom: 10px;        /* Space before the description */
+    font-size: 1.4rem;
+    color: #131921;             /* Dark theme color */
+}
+
+.security-card p {
+    font-size: 0.9rem;
+    color: #666;                /* Muted text for the instruction */
+    margin-bottom: 25px;        /* Space before the input */
+    line-height: 1.4;
+}
+
+/* Password Input for Verification */
+#reauth-password {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 20px;
+    border: 2px solid #eee;     /* Thicker border for better visibility */
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+#reauth-password:focus {
+    border-color: #131921;      /* Darker focus color for security */
+    outline: none;
+}
+
+/* Verify & Save Button */
+#btn-confirm-reauth {
+    width: 100%;
+    padding: 14px;
+    background: #131921;        /* Dark background for a strong action */
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+#btn-confirm-reauth:hover {
+    background: #232f3e;        /* Lighter dark blue on hover */
+}
+
+#btn-confirm-reauth:active {
+    transform: scale(0.98);     /* Slight "click" animation */
+}
+
+/* Secondary Cancel Button */
+.security-card .btn-close {
+    display: inline-block;
+    margin-top: 15px;
+    background: none;
+    border: none;
+    color: #888;                /* Subtle color for the secondary action */
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: none;      /* No underline by default */
+    transition: color 0.2s;
+}
+
+.security-card .btn-close:hover {
+    color: #333;                /* Darkens on hover */
+    text-decoration: underline;
+}
+
+/* Mobile View for Security Modal */
+@media (max-width: 400px) {
+    .security-card {
+        width: 90%;
+        padding: 30px 20px;
+    }
+}
+
+
+/* --- PROFILE CLOSE BUTTON --- */
+.close-profile-btn {
+    position: fixed;            /* Stays in the same spot while scrolling */
+    top: 20px;                  /* Gap from top */
+    right: 25px;                /* Gap from right */
+    width: 45px;                /* Width of the circle */
+    height: 45px;               /* Height of the circle */
+    background: #131921;        /* Dark background to contrast light profile page */
+    color: white;               /* White 'X' */
+    border: none;               /* No outline */
+    border-radius: 50%;         /* Perfect circle */
+    font-size: 1.5rem;          /* Size of the 'X' */
+    font-weight: bold;
+    cursor: pointer;            /* Hand icon on hover */
+    display: flex;              /* Center the 'X' */
+    align-items: center;        /* Center vertically */
+    justify-content: center;    /* Center horizontally */
+    z-index: 2100;              /* Higher than profile-page and sidebar */
+    transition: all 0.2s ease;  /* Smooth hover animation */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Drop shadow for visibility */
+}
+
+.close-profile-btn:hover {
+    background: #febd69;        /* Changes to orange on hover */
+    color: #111;                /* Dark text on hover */
+    transform: rotate(90deg);   /* Fun rotation effect */
+}
+
+/* Hide on mobile if it overlaps with sidebar header, or adjust position */
+@media (max-width: 768px) {
+    .close-profile-btn {
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
 }
 
 
@@ -165,13 +979,8 @@
     font-weight: bold;
 }
 
-.room-content { text-align: center; width: 80%; }
-.sub-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-top: 30px;
-}
+.room-content { text-align: center; width: 100%; }
+
 
 .sub-item {
     padding: 20px;
@@ -183,3 +992,126 @@
 }
 
 .hidden { display: none !important; }
+/* 1. THE CONTAINER (This makes the scroll happen) */
+#stores-room {
+    flex: 1;                  /* Takes up all space below the close button */
+    overflow-y: auto;         /* Enables vertical scrolling */
+    overflow-x: hidden;       /* Prevents side-to-side shaking */
+    padding: 100px 20px 100px; /* 100px bottom padding so last card isn't hidden */
+    
+    /* Smooth scrolling for mobile */
+    -webkit-overflow-scrolling: touch; 
+    scroll-behavior: smooth;
+}
+
+/* 2. THE GRID (The layout inside the scrollable area) */
+.sub-grid {
+    display: grid;
+    /* This creates a flexible grid that fits 2 cards on tablet/desktop 
+       and 1 card on small mobile phones */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* 3. SCROLLBAR STYLING (Optional - makes it look cleaner) */
+#stores-room::-webkit-scrollbar {
+    width: 5px;               /* Very thin scrollbar */
+}
+
+#stores-room::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.1); /* Subtle grey handle */
+    border-radius: 10px;
+}
+
+/* 4. OVERLAY FIX (Crucial) */
+#room-overlay {
+    display: flex;            /* Stack Close Button and Store Room */
+    flex-direction: column;   /* Top to bottom */
+    height: 100vh;            /* Full screen height */
+    overflow: hidden;         /* Prevents the WHOLE screen from scrolling twice */
+}
+
+/* --- 1. THE MAIN CARD CONTAINER --- */
+.store-card {
+    display: flex;                /* Aligns Image and Info side-by-side */
+    align-items: center;          /* Centers content vertically */
+    background: #ffffff;          /* Pure white card background */
+    border-radius: 12px;          /* Smooth rounded corners */
+    text-decoration: none;        /* Removes underline from the link */
+    color: inherit;               /* Keeps text color natural */
+    border: 1px solid #f0f0f0;    /* Very light border for definition */
+    margin-bottom: 5px;           /* Small gap between cards */
+    overflow: hidden;             /* Ensures image doesn't bleed out of corners */
+    transition: all 0.3s ease;    /* Smooth hover effect */
+}
+
+/* --- 2. HOVER EFFECT --- */
+.store-card:hover {
+    transform: translateY(-2px);  /* Slight lift on hover */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* Soft shadow */
+    border-color: var(--gold);    /* Highlight border with your brand color */
+}
+
+/* --- 3. THE LEFT SIDE: IMAGE --- */
+.store-img {
+    width: 150px;                  /* Fixed width for the image area */
+    height: 150px;                 /* Fixed height for a perfect square */
+    flex-shrink: 0;               /* Prevents the image from being squeezed */
+    background: #f9f9f9;          /* Placeholder color while loading */
+}
+
+.store-img img {
+    width: 100%;                  /* Fills the container width */
+    height: 100%;                 /* Fills the container height */
+    object-fit: cover;            /* Crops image perfectly without stretching */
+}
+
+/* --- 4. THE RIGHT SIDE: STORE INFO --- */
+.store-info {
+    padding: 12px 15px;           /* Inner spacing for text */
+    flex: 1;                      /* Takes up all remaining horizontal space */
+    display: flex;
+    flex-direction: column;       /* Stacks Name, Desc, and Link vertically */
+    gap: 4px;                     /* Consistent gap between text lines */
+}
+
+/* --- 5. STORE NAME --- */
+.store-info h3 {
+    margin: 0;
+    font-size: 1.05rem;           /* Clear, readable heading */
+    font-weight: 700;
+    color: var(--dark);           /* Uses your global dark color */
+}
+
+/* --- 6. STORE DESCRIPTION --- */
+.store-info p {
+    margin: 0;
+    font-size: 0.85rem;           /* Smaller text for secondary info */
+    color: #666666;               /* Muted grey for description */
+    line-height: 1.3;             /* Improved readability */
+    display: -webkit-box;         /* Logic to trim text if too long */
+    -webkit-line-clamp: 2;        /* Shows maximum 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* --- 7. THE "VISIT STORE" ACTION --- */
+.view-store {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--gold);           /* Uses your global gold color */
+    text-transform: uppercase;    /* Makes it look like a button/link */
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Simple icon animation inside the card */
+.store-card:hover .view-store i {
+    transform: translateX(3px);   /* Arrow nudges right on hover */
+    transition: 0.2s;
+}
