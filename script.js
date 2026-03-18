@@ -31,16 +31,6 @@ function toggleMenu() {
 }
 
 // Ensure you have these functions to handle the Room overlay
-window.closeRoom = function() {
-    const overlay = document.getElementById('room-overlay');
-    overlay.classList.add('hidden');
-    document.body.style.overflow = 'auto';
-    
-    // Also hide any active rooms inside so they don't stay open next time
-    const rooms = document.querySelectorAll('.room-content');
-    rooms.forEach(r => r.classList.add('hidden'));
-}
-
 window.openRoom = function(roomId) {
     const overlay = document.getElementById('room-overlay');
     const rooms = document.querySelectorAll('.room-content');
@@ -48,10 +38,20 @@ window.openRoom = function(roomId) {
     rooms.forEach(r => r.classList.add('hidden'));
     
     overlay.classList.remove('hidden');
-    const targetRoom = document.getElementById(roomId);
-    if(targetRoom) targetRoom.classList.remove('hidden');
+    const target = document.getElementById(roomId);
+    if(target) target.classList.remove('hidden');
     
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden'; // Lock background scroll
+}
+
+window.closeRoom = function() {
+    const overlay = document.getElementById('room-overlay');
+    overlay.classList.add('hidden');
+    document.body.style.overflow = 'auto'; // Restore scroll
+    
+    // Hide all contents so it starts fresh next time
+    const rooms = document.querySelectorAll('.room-content');
+    rooms.forEach(r => r.classList.add('hidden'));
 }
 
 
