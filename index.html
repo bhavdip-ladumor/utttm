@@ -23,7 +23,10 @@
     <link rel="stylesheet" href="css or js/search-menu.css">
     <link rel="stylesheet" href="css or js/slider1.css">
     <link rel="stylesheet" href="css or js/promo-slider.css">
-    <link rel="stylesheet" href="shopcart.css">
+    
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="my-account/cart/cart.css">
+    <script type="module" src="my-account/cart/cart-handler.js"></script>
     
 </head>
 <body>
@@ -42,28 +45,34 @@
             <i class="fas fa-bars"></i> <span>MENU</span>
         </button>
 
-        <div id="auth-container">
-            <button id="login-btn" class="btn-login-trigger">Sign In</button>
-            
-            <div id="profile-btn" class="profile-wrapper hidden">
+        <div id="auth-status-area">
+            <div class="profile-nav-container">
+             <a href="/my-account/log-in/log-in.html" id="nav-profile-link" class="nav-user-flex">
                 <div class="user-meta">
-                    <small>Hello,</small>
-                    <span id="user-display-name">Guest</span>
+                <small>Hello,</small>
+                <strong id="nav-user-name" style="color: antiquewhite;">Sign In</strong>
                 </div>
-                <img src="assets/default-user.png" id="user-photo" alt="Profile" class="profile-icon">
-                
-                <div class="profile-dropdown">
-                    <div class="dropdown-user-card">
-                        <strong id="drop-name">Customer</strong>
-                        <p id="drop-email"></p>
-                    </div>
-                    <hr>
-                    <a href="#profile" class="drop-item">My Profile</a>
-                    <a href="#orders" class="drop-item">My Orders</a>
-                    <button id="logout-btn" class="btn-logout">Sign Out</button>
+                <div class="profile-badge">
+                  <img src="assets/default-user.png" id="nav-user-pic" class="nav-icon">
                 </div>
+            </a>
+
+           <div id="nav-dropdown" class="nav-dropdown hidden">
+            <a href="profile.html?tab=profile" class="drop-item">My Profile</a>
+            <a href="profile.html?tab=orders" class="drop-item">My Orders</a>
+            <a href="profile.html?tab=shipping" class="drop-item">Shipping Address</a>
+            <hr>
+            <button id="nav-logout-btn">Sign Out</button>
             </div>
-        </div>
+            </div>
+          </div>
+
+          <div class="cart-nav-container">
+    <button id="btn-open-cart" class="nav-icon-btn">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-count">0</span> </button>
+</div>
+
     </div>
 
     <div class="hero-container">
@@ -89,86 +98,6 @@
     </div>
 </section>
 
-<div id="auth-modal" class="modal hidden">
-    <div class="modal-card">
-        <div class="auth-tabs">
-            <button id="tab-login" class="active">Login</button>
-            <button id="tab-signup">New Account</button>
-        </div>
-
-        <form id="login-form" class="auth-form">
-            <input type="email" id="login-email" placeholder="Email" required>
-            <input type="password" id="login-pw" placeholder="Password" required>
-            <p class="forgot-link" id="forgot-pw">Forgot Password?</p>
-            <button type="submit" class="btn-primary">Login</button>
-        </form>
-
-        <form id="signup-form" class="auth-form hidden">
-            <div class="form-row">
-                <input type="text" id="s-fname" placeholder="First Name" required>
-                <input type="text" id="s-lname" placeholder="Last Name" required>
-            </div>
-            <input type="email" id="s-email" placeholder="Email Address" required>
-            <input type="tel" id="s-phone" placeholder="Mobile Number" required>
-            <textarea id="s-address" placeholder="Full Delivery Address" rows="2" required></textarea>
-            <input type="password" id="s-pw" placeholder="Password (min 6 chars)" required>
-            <button type="submit" class="btn-primary">Create Account</button>
-        </form>
-
-        <div class="divider"><span>OR</span></div>
-        <button id="google-login-alt" onclick="loginWithGoogle()" class="btn-google">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18">
-            Continue with Google
-        </button>
-        <button onclick="closeAuth()" class="btn-close">Cancel</button>
-    </div>
-</div>
-
-<section id="profile-page" class="hidden">
-    <button onclick="closeProfile()" class="close-profile-btn" aria-label="Close Profile">✕</button>
-    <div class="profile-container">
-        <aside class="profile-sidebar">
-            <div class="sidebar-user">
-                <img src="" id="p-sidebar-pic" alt="User">
-                <h3 id="p-sidebar-name">Loading...</h3>
-            </div>
-            <nav class="sidebar-nav">
-                <button class="active" data-section="overview">Account Overview</button>
-                <button data-section="orders">My Orders</button>
-                <button data-section="address">Shipping Address</button>
-                <button id="p-logout">Logout</button>
-            </nav>
-        </aside>
-
-        <div class="profile-content">
-            <div id="overview-section">
-                <h2>Account Details</h2>
-                <form id="edit-profile-form">
-                    <div class="form-group">
-                        <label>Personal Info</label>
-                        <div class="form-row">
-                            <input type="text" id="p-fname" placeholder="First Name">
-                            <input type="text" id="p-lname" placeholder="Last Name">
-                        </div>
-                        <input type="tel" id="p-phone" placeholder="Mobile">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Shipping Details</label>
-                        <input type="text" id="addr-house" placeholder="House/Flat No.">
-                        <input type="text" id="addr-street" placeholder="Street Name">
-                        <input type="text" id="addr-area" placeholder="Area / Sector">
-                        <div class="form-row">
-                            <input type="text" id="addr-city" placeholder="City">
-                            <input type="text" id="addr-pin" placeholder="Pincode">
-                        </div>
-                    </div>
-                    <button type="button" id="btn-update-profile" class="btn-primary">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
 
 <div id="search-overlay-portal" class="search-portal hidden">
     <div class="search-portal-header">
@@ -184,15 +113,27 @@
         </div>
 </div>
 
-<div id="reauth-modal" class="modal hidden">
-    <div class="modal-card security-card">
-        <h3>Security Verification</h3>
-        <p>Confirm your password to save changes.</p>
-        <input type="password" id="reauth-password" placeholder="Enter Password">
-        <button id="btn-confirm-reauth" class="btn-primary">Verify & Save</button>
-        <button onclick="document.getElementById('reauth-modal').classList.add('hidden')" class="btn-close">Cancel</button>
+
+<div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <h3>My Cart</h3>
+        <button id="btn-close-cart"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    
+    <div id="cart-items-container" class="cart-body">
+        <p class="empty-msg">Your cart is empty.</p>
+    </div>
+
+    <div class="cart-footer">
+        <div class="total-row">
+            <span>Total:</span>
+            <span id="cart-total-price">₹0.00</span>
+        </div>
+        <button id="btn-checkout" class="btn-main">Checkout</button>
     </div>
 </div>
+<div id="cart-overlay" class="cart-overlay"></div>
+
 
 <div id="side-panel" class="side-nav-panel">
     <div class="side-nav-header">
@@ -494,13 +435,6 @@
 
 
 
-    <div class="cart-icon-fixed" id="cart-btn" onclick="toggleCart()">
-            <span class="icon">🛒</span>
-            <span id="cart-count" class="badge">0</span>
-        </div>
-
-    <div id="cart-placeholder"></div>
-
     <script>
         async function load(id, path) {
             const el = document.getElementById(id);
@@ -529,6 +463,7 @@
     <script src="storesdatabase.js"></script>
     <script src="main.js" type="module"></script>
     <script src="auth-handler.js" type="module"></script>
+    <script type="module" src="navbar.js"></script>
     <script src="database.js"></script>
     <script src="script.js"></script>
     <script src="cart.js"></script>
