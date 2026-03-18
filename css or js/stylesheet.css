@@ -1,0 +1,764 @@
+/* Main Section Background */
+.hero-search-section {
+    background: #1a242f; /* Dark Navy from your image */
+    padding: 60px 5% 40px;
+    text-align: center;
+    position: relative;
+    color: white;
+}
+
+/* Header & Menu Button Styling */
+.hero-header-top {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.menu-btn {
+    background: #007bff; /* Blue button */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* Typography */
+.hero-title {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+.hero-title span { color: #f3a847; } /* Orange text */
+
+/* The Search Box Container */
+.main-search-box {
+    max-width: 850px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.search-input-wrapper {
+    display: flex;
+    background: white;
+    border-radius: 8px; /* Sharp rounded corners from image */
+    overflow: hidden;
+    height: 55px;
+}
+
+.search-input-wrapper input {
+    flex: 1;
+    border: none;
+    padding: 0 20px;
+    font-size: 1.1rem;
+    outline: none;
+    color: #333;
+}
+
+/* The Orange Search Button */
+.search-btn {
+    background: #f3a847; /* Match image exactly */
+    border: none;
+    width: 80px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.search-btn:hover { background: #e09636; }
+
+/* Service Tags Styling */
+.service-info-tags {
+    margin-top: 30px;
+    font-size: 0.95rem;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    opacity: 0.9;
+}
+
+.tag-icon { margin-right: 5px; }
+.dot { color: #f3a847; margin: 0 5px; }
+
+/* Container to keep the badge relative to the icon */
+.cart-nav-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+}
+
+/* The Button Reset */
+.nav-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    position: relative;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The Shopping Cart Icon */
+.nav-icon-btn i {
+    font-size: 1.4rem; /* Scales well from Mobile to Desktop */
+    color: #3967ff; /* Change to match your theme */
+}
+
+/* The Notification Badge (The '0' circle) */
+#cart-count {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: #ff4757; /* Eye-catching red */
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff; /* Makes it pop against the icon */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Hover Effect */
+.nav-icon-btn:hover {
+    transform: scale(1.1);
+}
+
+.nav-icon-btn:hover i {
+    color: #007bff; /* Primary color on hover */
+}
+
+/* --- Responsive Adjustments --- */
+
+/* For Mobile */
+@media (max-width: 480px) {
+    .nav-icon-btn i {
+        font-size: 1.2rem;
+    }
+    #cart-count {
+        min-width: 16px;
+        height: 16px;
+        font-size: 0.6rem;
+    }
+}
+
+/* For TV / Large Displays */
+@media (min-width: 1920px) {
+    .nav-icon-btn i {
+        font-size: 2rem;
+    }
+    #cart-count {
+        min-width: 24px;
+        height: 24px;
+        font-size: 0.9rem;
+    }
+}
+
+/* The Dropdown Container */
+.live-search-dropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 9999;
+    display: none; /* Hidden by default */
+    max-height: 450px; /* Limits height */
+    overflow-y: auto; /* VERTICAL SCROLL ENABLED */
+    text-align: left;
+}
+
+.live-search-dropdown.active {
+    display: block;
+}
+
+/* Section Labels */
+.smart-search-label {
+    padding: 15px 15px 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #a0a0a0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Store Card Style */
+.smart-store-card {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    margin: 8px 12px;
+    background: linear-gradient(to right, #ffffff, #fffdf5); /* Subtle gold gradient */
+    border: 1px solid #f0e6cc;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.smart-store-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(243, 168, 71, 0.15); /* Orange/Gold glow */
+    border-color: #f3a847;
+}
+
+.smart-store-img {
+    width: 65px;
+    height: 65px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-right: 18px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.smart-store-info h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.smart-store-tag {
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: #f3a847;
+    background: rgba(243, 168, 71, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.smart-store-info p {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.3;
+}
+
+.smart-prod-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 18px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.smart-prod-row:hover {
+    background: #fcfcfc;
+}
+
+.smart-prod-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 15px;
+    border: 1px solid #eee;
+}
+
+.smart-prod-details .name {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Badge for variants in search results */
+.variant-badge {
+    font-size: 10px;
+    background: #eef2ff; /* Light blue/indigo tint */
+    color: #4f46e5;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: 1px solid #c7d2fe;
+}
+
+/* Ensure price line handles the badge well */
+.price-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.old-price {
+    font-size: 0.8rem;
+    color: #aaa;
+    text-decoration: line-through;
+    margin-right: 6px;
+    font-weight: 400;
+}
+.sale-price {
+    color: #e67e22; /* High-visibility orange */
+    font-weight: 800;
+}
+
+.no-results-box {
+    padding: 50px 20px;
+    text-align: center;
+    color: #999;
+    font-size: 0.95rem;
+}
+
+/* Scrollbar Styling */
+.live-search-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+.live-search-dropdown::-webkit-scrollbar-thumb {
+    background: #d1d1d1;
+    border-radius: 10px;
+}
+
+
+/* The background portal that covers the screen */
+/* The Full Screen Wrapper */
+.search-portal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff; /* Clean white background for results */
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+}
+
+/* The header stays fixed at the top */
+.search-portal-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+    background: white;
+}
+
+/* THE SCROLLABLE RESULTS AREA */
+.portal-results-container {
+    flex: 1;                /* Takes up all remaining space */
+    overflow-y: auto;       /* Allows scrolling for many products */
+    padding: 15px;
+    background: #fcfcfc;    /* Slightly off-white for contrast */
+    -webkit-overflow-scrolling: touch; /* Smooth scroll on iPhones */
+}
+
+/* Scrollbar styling for the results list */
+.portal-results-container::-webkit-scrollbar {
+    width: 6px;
+}
+.portal-results-container::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 10px;
+}
+
+/* Back Button inside portal */
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    padding: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    color: #333;
+}
+/* --- TOP BAR & PROFILE NAV --- */
+/* The main container holding Menu and Sign-In */
+.top-bar-controls {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 100%; /* Spans full width */
+    padding: 0 5%; /* Adds breathing room on sides */
+    display: flex;
+    justify-content: space-between; /* Pushes Menu Left, Auth Right */
+    align-items: center;
+    z-index: 1000;
+}
+
+
+
+/* Navigation Buttons */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar-nav button {
+    width: 100%;
+    text-align: left;
+    padding: 12px 15px;
+    border: none;
+    background: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.sidebar-nav button:hover {
+    background: #f0f0f0;
+}
+
+.sidebar-nav button.active {
+    background: #131921;        /* Dark blue/black active state */
+    color: white;
+}
+
+/* Container for the icon in side-nav */
+.nav-icon {
+    width: 35px; /* Fixed width ensures text starts at same spot */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+/* Adjust FontAwesome specifically if needed */
+.nav-icon i {
+    font-size: 1rem;
+    color: #555;
+}
+
+.nav-divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 15px 10px;
+}
+
+.nav-label {
+    padding-left: 18px;
+    font-size: 0.7rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+#p-logout {
+    color: #d9534f;             /* Danger red for logout */
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    border-radius: 0;
+}
+
+/* --- 4. CONTENT AREA & FORM --- */
+
+
+
+/* --- 4. DROPDOWN ITEMS --- */
+.drop-item {
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #444;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+    display: block;
+}
+
+.drop-item:hover {
+    background: #f0f7ff;
+    color: #0084ff;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 5px 0;
+}
+
+#nav-logout-btn {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 12px 20px;
+    text-align: left;
+    color: #ff4d4d; /* Alert red for logout */
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+#nav-logout-btn:hover {
+    background: #fff5f5;
+}
+
+/* --- 5. RESPONSIVE ADJUSTMENTS --- */
+
+/* Mobile View */
+@media (max-width: 768px) {
+    .user-meta { display: none; } /* On mobile, only show the circle icon to save space */
+    .nav-dropdown { width: 180px; position: fixed; top: 70px; right: 10px; }
+}
+
+/* TV View */
+@media (min-width: 2000px) {
+    .profile-badge { width: 80px; height: 80px; }
+    .user-meta strong { font-size: 1.8rem; }
+    .nav-dropdown { width: 400px; padding: 20px 0; }
+    .drop-item, #nav-logout-btn { font-size: 1.6rem; padding: 25px 40px; }
+}
+/* Rotate the badge slightly or highlight when menu is open (Optional) */
+.profile-nav-container:not(.hidden) .nav-user-flex:active {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(0.98);
+}
+
+/* Ensure the dropdown doesn't close when clicking INSIDE it */
+.nav-dropdown {
+    pointer-events: auto;
+}
+
+
+/* Dashboard Container */
+.dashboard {
+    display: grid;
+    /* Default for Desktop/TV: 4 columns or auto-fit */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px; /* Slightly smaller gap for mobile balance */
+    padding: 20px 5%;
+}
+
+/* Main Card Styling */
+.main-card {
+    background: #ffffff;
+    padding: 20px; /* Reduced padding for mobile fit */
+    border-radius: 15px; /* Slightly tighter corners */
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-card:hover {
+    transform: translateY(-5px);
+    border-color: #007bff;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+}
+
+.card-icon { 
+    font-size: 2.5rem; /* Balanced icon size */
+    margin-bottom: 10px; 
+}
+
+.main-card h3 {
+    font-size: 1rem;
+    margin: 5px 0;
+    color: #333;
+}
+
+.main-card p {
+    font-size: 0.8rem;
+    color: #777;
+    display: block; /* Ensures description stays below title */
+}
+
+/* --- THE MOBILE FIX (2 Cards per row) --- */
+@media (max-width: 480px) {
+    .dashboard {
+        /* Forces exactly 2 columns on small mobile screens */
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 10px;
+        padding: 15px;
+    }
+
+    .main-card {
+        padding: 15px 10px;
+    }
+
+    .card-icon {
+        font-size: 2rem;
+    }
+
+    .main-card p {
+        display: none; /* Optional: Hides description on tiny screens to keep it clean */
+    }
+}
+
+/* Overlay & Rooms */
+.overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close-room {
+    position: absolute;
+    top: 30px; right: 30px;
+    padding: 10px 25px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.room-content { text-align: center; width: 100%; }
+
+
+.sub-item {
+    padding: 20px;
+    background: #f8f9fa;
+    text-decoration: none;
+    color: #333;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.hidden { display: none !important; }
+/* 1. THE CONTAINER (This makes the scroll happen) */
+#stores-room {
+    flex: 1;                  /* Takes up all space below the close button */
+    overflow-y: auto;         /* Enables vertical scrolling */
+    overflow-x: hidden;       /* Prevents side-to-side shaking */
+    padding: 100px 20px 100px; /* 100px bottom padding so last card isn't hidden */
+    
+    /* Smooth scrolling for mobile */
+    -webkit-overflow-scrolling: touch; 
+    scroll-behavior: smooth;
+}
+
+/* 2. THE GRID (The layout inside the scrollable area) */
+.sub-grid {
+    display: grid;
+    /* This creates a flexible grid that fits 2 cards on tablet/desktop 
+       and 1 card on small mobile phones */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* 3. SCROLLBAR STYLING (Optional - makes it look cleaner) */
+#stores-room::-webkit-scrollbar {
+    width: 5px;               /* Very thin scrollbar */
+}
+
+#stores-room::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.1); /* Subtle grey handle */
+    border-radius: 10px;
+}
+
+/* 4. OVERLAY FIX (Crucial) */
+#room-overlay {
+    display: flex;            /* Stack Close Button and Store Room */
+    flex-direction: column;   /* Top to bottom */
+    height: 100vh;            /* Full screen height */
+    overflow: hidden;         /* Prevents the WHOLE screen from scrolling twice */
+}
+
+/* --- 1. THE MAIN CARD CONTAINER --- */
+.store-card {
+    display: flex;                /* Aligns Image and Info side-by-side */
+    align-items: center;          /* Centers content vertically */
+    background: #ffffff;          /* Pure white card background */
+    border-radius: 12px;          /* Smooth rounded corners */
+    text-decoration: none;        /* Removes underline from the link */
+    color: inherit;               /* Keeps text color natural */
+    border: 1px solid #f0f0f0;    /* Very light border for definition */
+    margin-bottom: 5px;           /* Small gap between cards */
+    overflow: hidden;             /* Ensures image doesn't bleed out of corners */
+    transition: all 0.3s ease;    /* Smooth hover effect */
+}
+
+/* --- 2. HOVER EFFECT --- */
+.store-card:hover {
+    transform: translateY(-2px);  /* Slight lift on hover */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* Soft shadow */
+    border-color: var(--gold);    /* Highlight border with your brand color */
+}
+
+/* --- 3. THE LEFT SIDE: IMAGE --- */
+.store-img {
+    width: 150px;                  /* Fixed width for the image area */
+    height: 150px;                 /* Fixed height for a perfect square */
+    flex-shrink: 0;               /* Prevents the image from being squeezed */
+    background: #f9f9f9;          /* Placeholder color while loading */
+}
+
+.store-img img {
+    width: 100%;                  /* Fills the container width */
+    height: 100%;                 /* Fills the container height */
+    object-fit: cover;            /* Crops image perfectly without stretching */
+}
+
+/* --- 4. THE RIGHT SIDE: STORE INFO --- */
+.store-info {
+    padding: 12px 15px;           /* Inner spacing for text */
+    flex: 1;                      /* Takes up all remaining horizontal space */
+    display: flex;
+    flex-direction: column;       /* Stacks Name, Desc, and Link vertically */
+    gap: 4px;                     /* Consistent gap between text lines */
+}
+
+/* --- 5. STORE NAME --- */
+.store-info h3 {
+    margin: 0;
+    font-size: 1.05rem;           /* Clear, readable heading */
+    font-weight: 700;
+    color: var(--dark);           /* Uses your global dark color */
+}
+
+/* --- 6. STORE DESCRIPTION --- */
+.store-info p {
+    margin: 0;
+    font-size: 0.85rem;           /* Smaller text for secondary info */
+    color: #666666;               /* Muted grey for description */
+    line-height: 1.3;             /* Improved readability */
+    display: -webkit-box;         /* Logic to trim text if too long */
+    -webkit-line-clamp: 2;        /* Shows maximum 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* --- 7. THE "VISIT STORE" ACTION --- */
+.view-store {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--gold);           /* Uses your global gold color */
+    text-transform: uppercase;    /* Makes it look like a button/link */
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Simple icon animation inside the card */
+.store-card:hover .view-store i {
+    transform: translateX(3px);   /* Arrow nudges right on hover */
+    transition: 0.2s;
+}

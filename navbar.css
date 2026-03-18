@@ -1,0 +1,108 @@
+.profile-nav-container {
+    position: relative;        /* Makes this the anchor for the dropdown */
+    display: inline-block;     /* Only takes as much width as needed */
+    z-index: 2000;             /* Ensures it stays above product cards and banners */
+}
+
+
+.nav-user-flex {
+    display: flex;             /* Aligns text and image side-by-side */
+    align-items: center;       /* Centers them vertically */
+    gap: 10px;                 /* Space between name and image */
+    text-decoration: none;     /* Removes link underline */
+    padding: 5px 10px;
+    border-radius: 50px;       /* Rounded pill shape */
+    transition: 0.3s ease;     /* Smooth hover effect */
+}
+
+.nav-user-flex:hover {
+    background: rgba(0, 0, 0, 0.05); /* Subtle grey background on hover */
+}
+
+.user-meta {
+    display: flex;
+    flex-direction: column;    /* Stacks "Hello" on top of the Name */
+    text-align: right;         /* Aligns text toward the profile picture */
+    line-height: 1.1;          /* Keeps lines tight together */
+}
+
+.user-meta small {
+    font-size: 0.75rem;        /* Smaller "Hello" */
+    color: #666;               /* Muted grey color */
+}
+
+.user-meta strong {
+    font-size: 0.95rem;        /* Bolder, larger Name */
+    color: #222;               /* Darker for readability */
+    white-space: nowrap;       /* Prevents name from breaking into two lines */
+}
+
+.profile-badge {
+    width: 40px;               /* Fixed size */
+    height: 40px;
+    border-radius: 50%;        /* Makes it a perfect circle */
+    overflow: hidden;          /* Crops the image into the circle */
+    border: 2px solid #0084ff; /* Brand color ring around the user */
+}
+
+.nav-icon {
+    width: 100%;               /* Fills the badge container */
+    height: 100%;
+    object-fit: cover;         /* Prevents image stretching */
+}
+
+
+.nav-dropdown {
+    position: absolute;        /* Floats over other content */
+    top: 100%;                 /* Sits exactly under the badge */
+    right: 0;                  /* Aligns to the right edge of the badge */
+    margin-top: 10px;          /* Space between badge and menu */
+    width: 220px;              /* Standard width for easy clicking */
+    background: #ffffff;
+    border-radius: 12px;       /* Modern rounded corners */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Soft shadow for depth */
+    padding: 8px 0;            /* Padding top and bottom */
+    border: 1px solid #eee;    /* Light border for definition */
+}
+
+
+.drop-item {
+    display: block;            /* Makes whole row clickable */
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #444;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.drop-item:hover {
+    background: #f0f7ff;       /* Light blue highlight */
+    color: #0084ff;            /* Blue text on hover */
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #eee; /* Light separator line */
+    margin: 5px 0;
+}
+
+#nav-logout-btn {
+    width: 100%;               /* Fills menu width */
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    text-align: left;          /* Aligns with other links */
+    color: #ff4d4d;            /* Red for "Alert" actions */
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+#nav-logout-btn:hover {
+    background: #fff5f5;       /* Light red highlight */
+}
+
+/* Hidden state */
+.hidden {
+    display: none !important;
+}
