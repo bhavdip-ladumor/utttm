@@ -615,15 +615,20 @@ hr {
 }
 
 .close-room {
-    position: absolute;
-    top: 30px; right: 30px;
-    padding: 10px 25px;
-    background: #ff4444;
+    position: fixed; /* Crucial for mobile */
+    top: 15px;
+    right: 15px;
+    z-index: 10001; /* Must be higher than #room-overlay */
+    background: #ff4757;
     color: white;
     border: none;
-    border-radius: 50px;
-    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 8px;
     font-weight: bold;
+    cursor: pointer;
+    /* Finger-friendly size */
+    min-width: 80px;
+    min-height: 44px; 
 }
 
 .room-content { text-align: center; width: 100%; }
