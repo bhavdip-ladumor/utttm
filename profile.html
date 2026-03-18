@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account | UttamHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="profile.css">
+    <script type="module" src="profile.js"></script>
+</head>
+<body>
+
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading UttamHub...</p>
+</div>
+
+<div class="prf-wrapper">
+    <button id="btn-back" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back</button>
+
+    <div class="auth-box">
+        <div id="login-section">
+            <h2>Sign In</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label>Email or Username</label>
+                    <input type="text" id="l-identifier" placeholder="Enter your email or username" maxlength="50" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="l-password" placeholder="••••••••" required>
+                </div>
+                <div class="form-help">
+                    <span id="btn-forgot" class="text-link">Forgot password or username?</span>
+                </div>
+                <button type="submit" class="btn-main">Sign In</button>
+            </form>
+
+            <div class="divider"><span>OR</span></div>
+
+            <button id="btn-google" class="btn-google">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" alt="G"> Sign in with Google
+            </button>
+
+            <p class="switch-text">New to UttamHub? <span id="go-to-signup" class="text-link">Create Account</span></p>
+        </div>
+
+        <div id="signup-section" class="hidden">
+            <h2>Create Account</h2>
+            <form id="signup-form">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <input type="text" id="s-fname" placeholder="John" maxlength="30" pattern="[A-Za-z ]+" title="Letters only" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Last Name</label>
+                        <input type="text" id="s-lname" placeholder="Doe" maxlength="30" pattern="[A-Za-z ]+" title="Letters only" required>
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" id="s-email" placeholder="example@mail.com" maxlength="50" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Mobile Number</label>
+                        <input type="tel" id="s-phone" placeholder="+91..." required>
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="s-dob" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Gender</label>
+                        <select id="s-gender" required>
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Current Status</label>
+                        <select id="s-job-status" required>
+                            <option value="">Select Status</option>
+                            <option value="student">Student</option>
+                            <option value="employed">Employed (Full-time)</option>
+                            <option value="business">Business</option>
+                            <option value="freelancer">Freelancer</option>
+                            <option value="searching">Actively seeking work</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Primary Skill Category</label>
+                        <select id="s-category" required>
+                            <option value="">Select Category</option>
+                            <option value="it">IT & Software</option>
+                            <option value="design">Design & Creative</option>
+                            <option value="marketing">Marketing & Sales</option>
+                            <option value="management">Business Management</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Current Study / Degree</label>
+                    <input type="text" id="s-study" placeholder="e.g. B.Tech Computer Science" maxlength="60" pattern="[A-Za-z0-9 .]+" title="Letters, numbers and periods only">
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Current Job/Role</label>
+                        <input type="text" id="s-job" placeholder="e.g. Student or Developer" maxlength="50" pattern="[A-Za-z ]+" title="Letters only">
+                    </div>
+                    <div class="input-group">
+                        <label>Specific Interests (Comma separated)</label>
+                        <input type="text" id="s-interest" placeholder="e.g. Data Science, Marketing" 
+                               maxlength="100" pattern="^[a-zA-Z0-9, ]*$" title="Only letters, numbers, and commas allowed">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="s-username" placeholder="johndoe123" maxlength="20" pattern="[a-zA-Z0-9_]+" title="Username can only contain letters, numbers, and underscores" required>
+                </div>
+                <div class="input-group">
+                    <label>Password (Min 8 chars)</label>
+                    <input type="password" id="s-password" placeholder="••••••••" minlength="8" required>
+                </div>
+
+                <button type="submit" class="btn-main">Create Your Account</button>
+            </form>
+            <p class="switch-text">Already have an account? <span id="go-to-login" class="text-link">Sign In</span></p>
+        </div>
+    </div>
+</div>
+
+<div id="dashboard-view" class="profile-page hidden">
+    <aside class="profile-sidebar">
+        <div class="sidebar-header">
+            <img src="assets/default-user.png" id="p-sidebar-pic" alt="Profile">
+            <h3 id="p-sidebar-name">User Name</h3>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <button class="nav-btn active" onclick="showTab('overview')">
+                <i class="fa-solid fa-user"></i> Account Overview
+            </button>
+            <button class="nav-btn" onclick="showTab('orders')">
+                <i class="fa-solid fa-box"></i> My Orders
+            </button>
+            <button class="nav-btn" onclick="showTab('shipping')">
+                <i class="fa-solid fa-location-dot"></i> Shipping Address
+            </button>
+            <hr>
+            <button id="p-logout" class="btn-logout-sidebar">
+                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            </button>
+            <button type="button" id="btn-back-dynamic" class="btn-back">
+                <i class="fa-solid fa-arrow-left"></i> Back to Shopping
+            </button>
+        </nav>
+    </aside>
+
+    <main class="profile-content">
+        <section id="overview-section" class="profile-section">
+            <h2>Professional Profile</h2>
+            <p style="margin-bottom: 20px; color: #666;">This information is used for our job & work database.</p>
+            
+            <form class="edit-profile-form">
+                <div class="form-group">
+                    <label>Full Name & Username</label>
+                    <div class="form-row">
+                        <input type="text" id="p-fname" placeholder="First Name" maxlength="30" pattern="[A-Za-z ]+" title="Letters only">
+                        <input type="text" id="p-lname" placeholder="Last Name" maxlength="30" pattern="[A-Za-z ]+" title="Letters only">
+                        <input type="text" id="p-username" placeholder="Username" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="p-phone" placeholder="Mobile Number">
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="p-dob">
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="p-gender">
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Current Study/Degree</label>
+                        <input type="text" id="p-study" placeholder="e.g. B.Tech, MBA" maxlength="60" pattern="[A-Za-z0-9 .]+" title="Letters, numbers and periods only">
+                    </div>
+                    <div class="form-group">
+                        <label>Job Title / Role</label>
+                        <input type="text" id="p-job" placeholder="e.g. Graphic Designer" maxlength="50" pattern="[A-Za-z ]+" title="Letters only">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Job Status</label>
+                        <select id="p-job-status">
+                            <option value="">Select Status</option>
+                            <option value="student">Student</option>
+                            <option value="searching">Actively Searching</option>
+                            <option value="employed">Employed</option>
+                            <option value="freelancer">Freelancer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Work Category</label>
+                        <select id="p-category">
+                            <option value="">Select Category</option>
+                            <option value="it">IT & Software</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="design">Design</option>
+                            <option value="business">Business</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Skills & Job Interests (Comma separated)</label>
+                    <input type="text" id="p-interest" placeholder="e.g. React, Photoshop, SEO" 
+                           maxlength="100" pattern="^[a-zA-Z0-9, ]*$" title="Only letters, numbers, and commas allowed">
+                </div>
+
+                <div class="form-group security-check">
+                    <label>Confirm Password to Save Changes</label>
+                    <input type="password" id="p-confirm-password" placeholder="Enter your current password" required>
+                </div>
+
+                <button type="button" id="btn-update-profile" class="btn-primary">Save Professional Details</button>
+                
+            </form>
+        </section>
+
+        <section id="orders-section" class="profile-section hidden">
+            <h2>Order History</h2>
+            <div id="orders-list">
+                <p class="empty-msg">You haven't placed any orders yet.</p>
+            </div>
+        </section>
+
+        <section id="shipping-section" class="profile-section hidden">
+            <h2>Default Shipping Address</h2>
+            <p style="margin-bottom: 15px; color: #666; font-size: 0.9rem;">Please provide your full address for deliveries and local work opportunities.</p>
+            
+            <div class="address-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Flat / Building / Floor</label>
+                        <input type="text" id="addr-house" placeholder="e.g. Flat 402, 4th Floor" maxlength="50" pattern="[A-Za-z0-9 ,-]+" title="Letters, numbers, commas and dashes only">
+                    </div>
+                    <div class="form-group">
+                        <label>Society / Colony Name</label>
+                        <input type="text" id="addr-society" placeholder="e.g. Green Valley Society" maxlength="50" pattern="[A-Za-z0-9 ]+" title="Letters and numbers only">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Street Line 1</label>
+                        <input type="text" id="addr-street1" placeholder="Main Road" maxlength="50" pattern="[A-Za-z0-9 ,]+" title="Letters, numbers and commas only">
+                    </div>
+                    <div class="form-group">
+                        <label>Street Line 2 (Optional)</label>
+                        <input type="text" id="addr-street2" placeholder="Sector" maxlength="50" pattern="[A-Za-z0-9 ,]+" title="Letters, numbers and commas only">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Area / Locality</label>
+                        <input type="text" id="addr-area" placeholder="e.g. Adajan" maxlength="40" pattern="[A-Za-z ]+" title="Letters only">
+                    </div>
+                    <div class="form-group">
+                        <label>Landmark</label>
+                        <input type="text" id="addr-landmark" placeholder="e.g. Near Hospital" maxlength="50" pattern="[A-Za-z0-9 ]+" title="Letters and numbers only">
+                    </div>
+                </div>
+
+                <div class="form-row-triple">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="addr-city" placeholder="City" maxlength="30" pattern="[A-Za-z ]+" title="Letters only">
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <input type="text" id="addr-state" placeholder="State" maxlength="30" pattern="[A-Za-z ]+" title="Letters only">
+                    </div>
+                    <div class="form-group">
+                        <label>Pincode</label>
+                        <input type="number" id="addr-pin" placeholder="6-digit PIN" oninput="if(this.value.length > 6) this.value = this.value.slice(0, 6);">
+                    </div>
+                </div>
+
+                <div class="address-form">
+    <div class="form-group security-check" style="margin-top: 20px;">
+        <label>Confirm Password to Save Address</label>
+        <input type="password" id="addr-confirm-password" placeholder="Enter password to save address" required>
+    </div>
+
+    <button type="button" id="btn-save-address" class="btn-primary">Save Address</button>
+</div>
+
+                
+            </div>
+        </section>
+    </main>
+</div>
+
+</body>
+</html>
