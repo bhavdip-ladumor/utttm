@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account | Uttam Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="log-in.css">
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="switch-controls">
+        <button id="btn-1" class="tab-btn active">Login</button>
+        <button id="btn-2" class="tab-btn">Register</button>
+    </div>
+
+    <div class="content-area">
+        <div id="div-1" class="content-div">
+            <h1>Welcome Back</h1>
+            <p>Sign in to your Uttam Hub account.</p>
+            
+            <form id="login-form" class="auth-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-pw" placeholder="Password" required>
+                <p class="forgot-link" id="forgot-pw">Forgot Password?</p>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+        </div>
+
+        <div id="div-2" class="content-div hidden">
+            <h1>Create Account</h1>
+            <p>Join our community today.</p>
+
+            <form id="signup-form" class="auth-form">
+                <div class="form-row">
+                    <input type="text" id="s-fname" placeholder="First Name" required>
+                    <input type="text" id="s-lname" placeholder="Last Name" required>
+                </div>
+
+                <input type="text" id="s-username" placeholder="Username" required>
+                <input type="email" id="s-email" placeholder="Email Address" required>
+                <input type="tel" id="s-phone" placeholder="Mobile Number" required>
+                <input type="password" id="s-pw" placeholder="Password (min 6 chars)" required>
+                <button type="submit" class="btn-primary">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="divider"><span>OR</span></div>
+    <button id="google-login-alt" onclick="loginWithGoogle()" class="btn-google">
+        <img src="google-icon.svg" alt="Google">
+        Continue with Google
+    </button>
+    <button onclick="closeAuth()" class="btn-close">Cancel</button>
+</div>
+
+    <script type="module" src="log-in.js"></script>
+    <script type="module" src="checkauth.js"></script>
+    <script type="module" src="log.js"></script>
+    <script type="module" src="logintab.js"></script>
+</body>
+</html>
