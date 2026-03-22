@@ -78,3 +78,43 @@ document.getElementById('nav-logout-btn')?.addEventListener('click', () => {
         window.location.reload(); 
     });
 });
+
+// --- TAB AUTO-SELECTOR FROM URL ---
+// --- TAB AUTO-SELECTOR FROM URL ---
+/** --- URL TAB HANDLER --- **/
+/** --- URL TAB HANDLER (Inside navbar.js) --- **/
+function initTabFromUrl() {
+    // 1. Check if we are actually on the profile page
+    // This prevents errors on index.html or other pages
+    if (!window.location.pathname.includes('profile.html')) {
+        return; 
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabToOpen = urlParams.get('tab');
+
+    if (tabToOpen) {
+        console.log("Profile Page detected. Opening tab:", tabToOpen);
+
+        // 2. Find the button in the profile's sidebar/nav
+        const targetBtn = document.querySelector(`.nav-btn[data-tab="${tabToOpen}"]`);
+
+        if (targetBtn) {
+            // 3. Wait 300ms to make sure profile-manage.js has loaded its tabs
+            setTimeout(() => {
+                // Remove 'active' from all buttons to be safe
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                
+                // Click the button and make it blue/active
+                targetBtn.click();
+                targetBtn.classList.add('active');
+                
+                // Scroll to the content for mobile users
+                targetBtn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
+    }
+}
+
+// Keep this at the bottom of navbar.js
+document.addEventListener('DOMContentLoaded', initTabFromUrl);
