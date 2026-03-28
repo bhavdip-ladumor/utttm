@@ -1,0 +1,97 @@
+/* Container to keep the badge relative to the icon */
+.cart-nav-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+}
+
+/* The Button Reset */
+.nav-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    position: relative;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The Shopping Cart Icon */
+.nav-icon-btn i {
+    font-size: 1.4rem; /* Scales well from Mobile to Desktop */
+    color: #333; /* Change to match your theme */
+}
+
+/* The Notification Badge (The '0' circle) */
+#cart-count {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: #ff4757; /* Eye-catching red */
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff; /* Makes it pop against the icon */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Hover Effect */
+.nav-icon-btn:hover {
+    transform: scale(1.1);
+}
+
+.nav-icon-btn:hover i {
+    color: #007bff; /* Primary color on hover */
+}
+
+/* --- Responsive Adjustments --- */
+
+/* For Mobile */
+@media (max-width: 480px) {
+    .nav-icon-btn i {
+        font-size: 1.2rem;
+    }
+    #cart-count {
+        min-width: 16px;
+        height: 16px;
+        font-size: 0.6rem;
+    }
+}
+
+/* For TV / Large Displays */
+@media (min-width: 1920px) {
+    .nav-icon-btn i {
+        font-size: 2rem;
+    }
+    #cart-count {
+        min-width: 24px;
+        height: 24px;
+        font-size: 0.9rem;
+    }
+}
+
+
+
+
+
+
+
+
+<div class="cart-nav-container">
+    <button id="btn-open-cart" class="nav-icon-btn">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="cart-count">0</span> </button>
+</div>
+
+
+<div id="cart-overlay" class="cart-overlay"></div>

@@ -1,0 +1,880 @@
+/* Reset and Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5; /* Light grey background to make glass pop */
+    min-height: 100vh;
+}
+
+/* --- FULL WIDTH HEADER SECTION --- */
+.profile-page-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f2f5; 
+}
+
+/* THE TOP BANNER - Full Width & Deep Gradient */
+.top-box {
+    width: 100%;
+    height: 25vh; 
+    min-height: 180px;
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+/* THE GLASSY PROFILE CARD - Refined Overlap */
+.profile-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    /* Ultra-Glass Effect */
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    
+    border-radius: 24px;
+    padding: 30px 50px;
+    width: 92%;
+    max-width: 1000px;
+    
+    /* Overlap the banner by 80px */
+    margin-top: -80px; 
+    
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+/* Text Side Styling */
+.user-details-slim {
+    display: flex;
+    flex-direction: column;
+}
+
+.name-line {
+    margin: 0;
+    font-size: 2.2rem; /* Bold, Large Name */
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: #1a1a1a;
+}
+
+.username-line {
+    margin-top: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #3498db; /* Professional Blue accent */
+    background: rgba(52, 152, 219, 0.1);
+    padding: 4px 12px;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+/* Profile Picture Side - Larger & Sharper */
+.profile-pic-container {
+    width: 120px;
+    height: 120px;
+}
+
+#user-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* --- MOBILE VIEW FOR HEADER --- */
+@media (max-width: 768px) {
+    .profile-card {
+        flex-direction: column-reverse; /* Avatar on top */
+        text-align: center;
+        padding: 25px;
+        margin-top: -100px; /* Push it up more on mobile */
+        gap: 15px;
+    }
+    
+    .user-details-slim {
+        align-items: center;
+    }
+
+    .name-line {
+        font-size: 1.8rem;
+    }
+
+    .profile-pic-container {
+        width: 110px;
+        height: 110px;
+    }
+}
+
+/* --- 1. MAIN LAYOUT CONTAINER --- */
+.profile-body-container {
+    display: flex;
+    gap: 30px;
+    width: 95%;
+    max-width: 1100px;
+    margin: 40px auto;
+    align-items: flex-start; /* Prevents sidebar from stretching weirdly */
+}
+
+/* --- 2. GLASSY SIDEBAR NAVIGATION --- */
+.profile-container {
+    display: flex;
+    width: 95%;
+    max-width: 1100px;
+    height: 80vh;
+    gap: 20px;
+}
+
+/* Glass Sidebar */
+.glass-sidebar {
+    width: 280px;
+    background: var(--glass-white);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px 20px;
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-brand {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 30px;
+    color: var(--primary-blue);
+    padding-left: 15px;
+}
+
+.nav-btn {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    border: none;
+    background: transparent;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: #444;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.nav-btn:hover {
+    background: rgba(255,255,255,0.8);
+}
+
+.nav-btn.active {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.nav-spacer { flex-grow: 1; }
+
+.logout-btn { color: #d63031; }
+
+/* Glass Content Area */
+.glass-content {
+    flex: 1;
+    background: var(--glass-white);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid rgba(255,255,255,0.3);
+    position: relative;
+    overflow-y: auto;
+}
+
+/* Visibility Control */
+.tab-content {
+    display: none; /* Everything hidden by default */
+    animation: fadeIn 0.4s ease;
+}
+
+.tab-content.active {
+    display: block; /* Only show active */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.placeholder-card {
+    margin-top: 30px;
+    padding: 50px;
+    background: rgba(255,255,255,0.5);
+    border: 1px dashed #ccc;
+    border-radius: 15px;
+    text-align: center;
+    color: #888;
+}
+
+/* --- MOBILE SPECIFIC STYLES (Max-width: 768px) --- */
+/* --- MOBILE NAVIGATION (Top Grid Layout) --- */
+@media screen and (max-width: 768px) {
+    
+    .profile-container {
+        flex-direction: column; /* Stack Nav on top of Content */
+        height: auto;
+        width: 100%;
+        gap: 15px;
+        padding: 10px;
+    }
+
+    /* Transform Sidebar into a Top Nav Grid */
+    .glass-sidebar {
+        width: 100%;
+        height: auto;
+        padding: 15px;
+        border-radius: 15px;
+        display: block; /* Switch from flex-column */
+    }
+
+    .nav-brand {
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+    }
+
+    /* The Button Container */
+    #profile-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3 buttons per line */
+        gap: 8px;
+    }
+
+    /* Make buttons smaller for mobile grid */
+    .nav-btn {
+        flex-direction: column; /* Icon on top of text */
+        justify-content: center;
+        padding: 10px 5px;
+        font-size: 0.75rem;
+        text-align: center;
+        margin-bottom: 0;
+        gap: 5px;
+    }
+
+    .nav-btn i {
+        font-size: 1.2rem;
+        width: auto;
+    }
+
+    /* Hide the spacer and divider on mobile */
+    .nav-spacer, .nav-divider {
+        display: none;
+    }
+
+    /* Special handling for Logout (Last button) */
+    .logout-btn {
+        grid-column: span 3; /* Make logout full width at the bottom of the grid */
+        flex-direction: row;
+        margin-top: 5px;
+        background: rgba(214, 48, 49, 0.1);
+    }
+
+    /* Content Area */
+    .glass-content {
+        width: 100%;
+        min-height: 400px;
+        padding: 25px 15px;
+        border-radius: 15px;
+    }
+}
+
+/* Extra small screens (e.g. iPhone SE) */
+@media screen and (max-width: 400px) {
+    #profile-nav {
+        grid-template-columns: repeat(2, 1fr); /* 2 buttons per line if 3 is too tight */
+    }
+    .logout-btn {
+        grid-column: span 2;
+    }
+}
+
+/* ============================================================== */
+
+/* --- 1. SECTION HEADER --- */
+#account-section .section-header {
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 15px;
+}
+
+#account-section h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1a1a1a;
+}
+
+#account-section p {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* --- 2. THE FORM GRID --- */
+.account-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns for Name */
+    gap: 20px;
+}
+
+.full-width {
+    grid-column: span 2; /* Spans full width for Email, Username, Phone */
+}
+
+/* --- 3. INPUT GROUPS & LABELS --- */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-left: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- 4. INPUT FIELDS (Glass Style) --- */
+.input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.5); /* Semi-transparent */
+    font-size: 1rem;
+    color: #333;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Readonly/Disabled State Look */
+.input-group input[readonly] {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.05);
+    color: #555;
+    cursor: default;
+}
+
+/* --- 5. USERNAME WRAPPER (@ symbol) --- */
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.input-prefix {
+    padding: 0 15px;
+    font-weight: 800;
+    color: #3498db; /* Matching your header username color */
+    background: rgba(52, 152, 219, 0.1);
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper input {
+    border: none !important; /* Remove internal border */
+    background: transparent !important;
+}
+
+/* --- 6. SECURITY ACTIONS (Password Row) --- */
+.security-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: rgba(30, 60, 114, 0.05); /* Very light blue tint */
+    border-radius: 16px;
+    margin-top: 10px;
+}
+
+.action-info label {
+    font-weight: 700;
+    display: block;
+}
+
+.action-info p {
+    font-size: 0.8rem !important;
+    margin: 0 !important;
+    color: #888;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    background: white;
+    border: 1.5px solid #1e3c72;
+    color: #1e3c72;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.btn-secondary:hover {
+    background: #1e3c72;
+    color: white;
+}
+
+/* --- 7. FORM FOOTER & EDIT BUTTON --- */
+.form-footer {
+    margin-top: 40px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-save {
+    padding: 16px 40px;
+    background: #1e3c72;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(30, 60, 114, 0.2);
+    transition: 0.3s ease;
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px rgba(30, 60, 114, 0.3);
+}
+
+/* --- MOBILE RESPONSIVE --- */
+@media screen and (max-width: 600px) {
+    .account-form-grid {
+        grid-template-columns: 1fr; /* Stack everything in one column */
+    }
+    .full-width {
+        grid-column: span 1;
+    }
+    .security-actions {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}
+
+/* ===================================================================== */
+
+/* --- SHIPPING FORM SPECIFICS --- */
+.form-sub-section {
+    margin-top: 25px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-sub-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: #1e3c72;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.step-num {
+    background: #1e3c72;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+/* Flex Row for Side-by-Side inputs */
+.row-flex {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.row-flex .input-group {
+    flex: 1;
+}
+
+/* Triple Grid for Pincode/City/State */
+.address-grid-triple {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+/* Textarea styling */
+#ship-artist-note {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.5);
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    outline: none;
+}
+
+/* Responsive adjustments for the row-flex and triple-grid */
+@media screen and (max-width: 600px) {
+    .row-flex, .address-grid-triple {
+        flex-direction: column;
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =================================================================================== */
+/* --- ORDERS SECTION STYLES --- */
+/* --- ORDER SECTION CONTAINER --- */
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+/* --- ORDER CARD MAIN --- */
+.order-card {
+    background: #ffffff;
+    border: 1px solid #eef0f2;
+    border-radius: 16px;
+    padding: 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.order-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* --- FORMAT 1: HEADER --- */
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.order-id-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.order-number {
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.2px;
+}
+
+.order-date {
+    color: #8e8e93;
+    font-size: 0.85rem;
+}
+
+/* Status Badges */
+.order-status {
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.status-pending { background-color: #fff4e5; color: #ff9500; }
+.status-shipped { background-color: #e5f1ff; color: #007aff; }
+.status-delivered { background-color: #eafff0; color: #34c759; }
+
+/* --- FORMAT 2: ITEM LIST --- */
+.order-card-body {
+    padding: 20px 0;
+    border-top: 1px solid #f2f2f7;
+    border-bottom: 1px solid #f2f2f7;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.item-mini-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    object-fit: cover;
+    background-color: #f8f9fa;
+    border: 1px solid #f2f2f7;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-name {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.item-meta {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    color: #8e8e93;
+}
+
+/* --- FORMAT 3: FOOTER --- */
+.order-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.total-display {
+    display: flex;
+    flex-direction: column;
+}
+
+.total-label {
+    font-size: 0.75rem;
+    color: #8e8e93;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.total-price {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1e3c72;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-help, .btn-view-details {
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.2s;
+}
+
+.btn-help {
+    background-color: #25d366;
+    color: #ffffff;
+}
+
+.btn-view-details {
+    background-color: #f2f2f7;
+    color: #1e3c72;
+}
+
+.btn-help:hover, .btn-view-details:hover {
+    opacity: 0.85;
+}
+
+/* --- RESPONSIVE DESIGN (@media) --- */
+
+@media (max-width: 576px) {
+    .order-card {
+        padding: 16px;
+    }
+
+    .order-card-header {
+        align-items: center;
+    }
+
+    .order-number {
+        font-size: 0.95rem;
+    }
+
+    .order-card-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-help, .btn-view-details {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .total-display {
+        align-items: center;
+        margin-bottom: 8px;
+    }
+}
+
+/* =======================================================
+===============================================
+--------info.js and personal information  */
+
+/* --- Personal Section Layout --- */
+.account-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+.row-flex {
+    display: flex;
+    gap: 1.5rem;
+    grid-column: span 2;
+}
+
+/* --- Input Styling --- */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.input-group label {
+    font-size: 0.9rem;
+    color: rgba(80, 80, 80, 0.8);
+    font-weight: 500;
+}
+
+.input-group input, 
+.input-group select, 
+.input-group textarea {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    color: #757474;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus, 
+.input-group select:focus {
+    outline: none;
+    border-color: var(--primary-color, #00d4ff);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.disabled-style {
+    background: rgba(255, 255, 255, 0.02) !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    cursor: not-allowed;
+}
+
+/* --- Dynamic Sections --- */
+.dynamic-fields {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--primary-color, #00d4ff);
+    animation: fadeIn 0.4s ease forwards;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Status Selector Highlight --- */
+.status-selector-box {
+    background: rgba(0, 212, 255, 0.05);
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px dashed rgba(0, 212, 255, 0.3);
+}
+
+/* --- Mobile View Adjustments --- */
+@media (max-width: 768px) {
+    .account-form-grid {
+        grid-template-columns: 1fr; /* Stack everything */
+        gap: 1.2rem;
+    }
+
+    .full-width, .row-flex {
+        grid-column: span 1;
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .dynamic-fields {
+        padding: 1rem;
+    }
+
+    .btn-save {
+        width: 100%;
+        padding: 15px;
+    }
+}
+
+/* --- Checkbox Styling --- */
+#p-is-hiring {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary-color, #00d4ff);
+    cursor: pointer;
+}
