@@ -17,7 +17,7 @@
     
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css or js/card-style.css">
+    <!-- <link rel="stylesheet" href="css or js/card-style.css"> -->
     <link rel="stylesheet" href="css or js/stylesheet.css">
     <link rel="stylesheet" href="css or js/navigation-style.css">
     <link rel="stylesheet" href="css or js/search-menu.css">
@@ -44,35 +44,35 @@
         <button class="menu-open-btn" onclick="toggleMenu()">
             <i class="fas fa-bars"></i> <span>MENU</span>
         </button>
-
+    <div class="rdb">
         <div id="auth-status-area">
             <div class="profile-nav-container">
-             <a href="my-account/log-in/log-in.html" id="nav-profile-link" class="nav-user-flex">
-                <div class="user-meta">
-                <small>Hello,</small>
-                <strong id="nav-user-name" style="color: antiquewhite;">Sign In</strong>
+                <a href="my-account/log-in/log-in.html" id="nav-profile-link" class="nav-user-flex">
+                    <div class="user-meta">
+                        <small>Hello,</small>
+                        <strong id="nav-user-name" style="color: antiquewhite;">Sign In</strong>
+                    </div>
+                    <div class="profile-badge">
+                        <img src="assets/default-user.png" id="nav-user-pic" class="nav-icon">
+                    </div>
+                </a>
+
+                <div id="nav-dropdown" class="nav-dropdown hidden">
+                    <a href="my-account/profile/profile.html" class="drop-item">My Profile</a>
+                    <a href="my-account/profile/profile.html?tab=orders" class="drop-item">My Orders</a>
+                    <a href="my-account/profile/profile.html?tab=shipping" class="drop-item">Shipping Address</a>
+                    <hr>
+                    <button id="nav-logout-btn">Sign Out</button>
                 </div>
-                <div class="profile-badge">
-                  <img src="assets/default-user.png" id="nav-user-pic" class="nav-icon">
-                </div>
-            </a>
-
-           <div id="nav-dropdown" class="nav-dropdown hidden">
-            <a href="my-account/profile/profile.html" class="drop-item">My Profile</a>
-            <a href="my-account/profile/profile.html?tab=orders" class="drop-item">My Orders</a>
-            <a href="my-account/profile/profile.html?tab=shipping" class="drop-item">Shipping Address</a>
-            <hr>
-            <button id="nav-logout-btn">Sign Out</button>
             </div>
-            </div>
-          </div>
+        </div>
 
-          <div class="cart-nav-container">
-    <button id="btn-open-cart" class="nav-icon-btn">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span id="cart-count">0</span> </button>
-</div>
-
+        <div class="cart-nav-container">
+            <button id="btn-open-cart" class="nav-icon-btn">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="cart-count">0</span> </button>
+        </div>
+    </div>
     </div>
 
     <div class="hero-container">
@@ -290,7 +290,7 @@
 <!-- --------------------------------------------- -->
     <!-- promo slider 2 end -->
 <!-- ------------------------------------------------- -->
-      <section class="dashboard">
+<section class="dashboard">
     <div class="main-card" onclick="openRoom('stores-room')">
         <div class="card-icon">🛍️</div>
         <h3>Retail Stores</h3>
@@ -349,6 +349,17 @@
             <div class="store-info">
                 <h3>wooden Beyond</h3>
                 <p>for Furniture, art, fire A TO z every type wood is here just visit our store</p>
+                <span class="view-store">Visit Store <i class="fas fa-arrow-right"></i></span>
+            </div>
+        </a>
+
+        <a href="setbrand/print/print-matrix-solution.html" class="store-card">
+            <div class="store-img">
+                <img src="assets/acrylic-hub.jpg" alt="Print Matrix Solution">
+            </div>
+            <div class="store-info">
+                <h3>Print Matrix Solution</h3>
+                <p>Everytype of Print (rgb cmyk stiker vinyl) and on any surface .</p>
                 <span class="view-store">Visit Store <i class="fas fa-arrow-right"></i></span>
             </div>
         </a>
