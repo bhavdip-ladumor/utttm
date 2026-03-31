@@ -399,7 +399,7 @@
 .rdb {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 0px;
 }
 
 .profile-nav-container {
