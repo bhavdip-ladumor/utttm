@@ -1,0 +1,92 @@
+:root {
+    --gold: #d4af37;
+    --dark: #0f1012;
+    --soft-white: #f8f9fa;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(circle at top right, #ffffff, #e0e0e0);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-container {
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 40px 30px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.logo-img {
+    width: 80px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: var(--dark);
+    font-weight: 800;
+}
+
+p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+}
+
+.google-btn {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+}
+
+.google-btn img {
+    width: 20px;
+}
+
+.google-btn:hover {
+    background: #f1f1f1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.footer-links {
+    margin-top: 25px;
+}
+
+.footer-links a {
+    color: var(--dark);
+    text-decoration: none;
+    font-size: 0.85rem;
+    opacity: 0.6;
+}
+
+.footer-links a:hover {
+    opacity: 1;
+}
