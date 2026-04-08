@@ -3,9 +3,8 @@ import { auth, provider, signInWithPopup, doc, setDoc, getDoc, db } from "../../
 const loginBtn = document.getElementById('google-login-btn');
 const backLink = document.getElementById('back-link');
 
-// 1. Handle the "Go Back" functionality
+// 1. Handle the "Go Back" link (Standard navigation)
 backLink.addEventListener('click', () => {
-    // If there is a history, go back; otherwise, go to home
     if (document.referrer && document.referrer.includes(window.location.hostname)) {
         window.history.back();
     } else {
@@ -13,7 +12,7 @@ backLink.addEventListener('click', () => {
     }
 });
 
-// 2. Handle Google Login
+// 2. Handle Google Login with History Replacement
 loginBtn.addEventListener('click', async () => {
     try {
         const result = await signInWithPopup(auth, provider);
@@ -34,14 +33,17 @@ loginBtn.addEventListener('click', async () => {
             });
         }
 
-// REDIRECT LOGIC: 
-        // If they came from a specific page (like a product), send them back there.
-        // Otherwise, send them to the main index.
-        if (document.referrer && document.referrer.includes(window.location.hostname)) {
-            window.location.href = document.referrer;
-        } else {
-            window.location.href = "../../../index.html";
-        }
+        // Determine destination
+        const destination = (document.referrer && document.referrer.includes(window.location.hostname)) 
+            ? document.referrer 
+            : "../../../index.html";
+
+        /**
+         * THE FIX: window.location.replace() 
+         * This removes the login page from the browser history.
+         * If the user clicks 'back' from the destination, they won't see this login page.
+         */
+        window.location.replace(destination);
 
     } catch (error) {
         console.error("Login Error:", error.message);
