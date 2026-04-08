@@ -1,0 +1,956 @@
+/* Print Matrix Solution 
+    Aesthetic: High-Tech, Minimalist, Precision-focused 
+*/
+
+:root {
+    --matrix-cyan: #ffb800; /* Deep Gold/Amber */
+    --matrix-black: #ffffff; /* Main Background to White */
+    --matrix-gray: #f8f9fa; /* Light mode contrast gray */
+    --matrix-border: #e0e0e0; /* Subtle light border */
+    --text-main: #1a1a1a; /* Dark text for light background */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--matrix-black);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* --- Header Layout --- */
+.main-header {
+    background-color: var(--matrix-black);
+    border-bottom: 1px solid var(--matrix-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1800px; /* Wider for TV views */
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+/* --- Brand Logo Styling --- */
+.logo-text {
+    text-decoration: none;
+    color: #000;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.logo-text span {
+    color: var(--matrix-cyan);
+}
+
+/* --- Profile Block Styling (Preserving your structure) --- */
+.profile-nav-container {
+    position: relative;
+}
+
+.nav-user-flex {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #333;
+}
+
+.user-meta {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-meta small {
+    font-size: 0.7rem;
+    color: #666;
+    line-height: 1;
+}
+
+.user-meta strong {
+    font-size: 0.9rem;
+}
+
+.profile-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #eee;
+    overflow: hidden;
+    border: 1px solid var(--matrix-border);
+}
+
+.nav-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- Dropdown Styling --- */
+.nav-dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 15px);
+    background: #fff;
+    border: 1px solid var(--matrix-border);
+    width: 200px;
+    padding: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.nav-dropdown.hidden { display: none; }
+
+.drop-item {
+    display: block;
+    padding: 10px 20px;
+    color: #444;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.drop-item:hover {
+    background: #f5f5f5;
+    color: var(--matrix-cyan);
+}
+
+#nav-logout-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    text-align: left;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+/* --- RESPONSIVENESS --- */
+
+/* Mobile (Up to 600px) */
+@media (max-width: 600px) {
+    .logo-text { font-size: 1.1rem; }
+    .user-meta { display: none; } /* Hide "Hello, Sign In" on small phones */
+    .header-container { padding: 0 15px; }
+}
+
+/* Tablet (600px to 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .logo-text { font-size: 1.3rem; }
+    .header-container { padding: 0 30px; }
+}
+
+/* TV / Ultra Wide (Above 1920px) */
+@media (min-width: 1921px) {
+    .logo-text { font-size: 2rem; }
+    .header-container { padding: 0 10%; }
+    .profile-badge { width: 50px; height: 50px; }
+    .user-meta strong { font-size: 1.2rem; }
+}
+
+/* --- Navbar Layout --- */
+.main-navbar {
+    background-color: var(--matrix-gray);
+    border-bottom: 1px solid var(--matrix-border);
+    padding: 12px 0;
+    position: sticky;
+    top: 70px; /* Sits right under the header */
+    z-index: 999;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0 5%;
+    gap: 20px;
+}
+
+/* --- Common Icon Buttons --- */
+.nav-icon-btn {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.3s;
+    position: relative;
+}
+
+.nav-icon-btn:hover {
+    color: var(--matrix-cyan);
+}
+
+.nav-icon-btn span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* --- Search Bar --- */
+.nav-middle {
+    flex: 1;
+    max-width: 600px;
+}
+
+.search-wrapper {
+    display: flex;
+    background: #fff;
+    border: 1px solid var(--matrix-border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+}
+
+.search-wrapper:focus-within {
+    border-color: var(--matrix-cyan);
+}
+
+.search-wrapper input {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    color: #333;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.search-btn {
+    background: #eee;
+    border: none;
+    color: #666;
+    padding: 0 15px;
+    cursor: pointer;
+    border-left: 1px solid var(--matrix-border);
+}
+
+.search-btn:hover {
+    color: #000;
+}
+
+/* --- Cart Specific (Preserving your logic) --- */
+#cart-count {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background: var(--matrix-cyan);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+}
+
+/* --- RESPONSIVENESS --- */
+
+/* Mobile (Up to 600px) */
+@media (max-width: 600px) {
+    .nav-container { padding: 0 15px; gap: 10px; }
+    
+    .nav-left span { display: none; } /* Hide "Menu" text, keep icon */
+    
+    .nav-middle { order: 3; max-width: 100%; flex-basis: 100%; } /* Move search below on mobile */
+    .nav-container { flex-wrap: wrap; }
+    
+    .main-navbar { top: 70px; }
+}
+
+/* Tablet (601px to 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .nav-middle { max-width: 400px; }
+    .nav-container { padding: 0 30px; }
+}
+
+/* TV / Ultra Wide (Above 1920px) */
+@media (min-width: 1921px) {
+    .main-navbar { padding: 20px 0; }
+    .nav-middle { max-width: 800px; }
+    .search-wrapper input { font-size: 1.2rem; padding: 15px; }
+    .nav-icon-btn { font-size: 1.5rem; }
+}
+
+
+
+/* --- Side Panel Styles --- */
+.side-panel {
+    position: fixed;
+    top: 0;
+    left: -320px; /* Hidden by default */
+    width: 300px;
+    height: 100%;
+    background: #fff;
+    z-index: 2001;
+    transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border-right: 1px solid var(--matrix-border);
+    display: flex;
+    flex-direction: column;
+}
+
+.side-panel.active {
+    left: 0;
+}
+
+.panel-header {
+    padding: 30px 20px;
+    background: var(--matrix-gray);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.panel-user-pic {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid var(--matrix-cyan);
+}
+
+.panel-close-btn {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.panel-content {
+    padding: 20px;
+}
+
+.panel-label {
+    color: var(--matrix-cyan);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.panel-link {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    padding: 12px 0;
+    font-size: 1rem;
+    border-bottom: 1px solid var(--matrix-border);
+}
+
+.panel-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+}
+
+.panel-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- Search Results Grid --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.product-card {
+    background: #fff;
+    border: 1px solid var(--matrix-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--matrix-cyan);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.product-card img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+.card-info {
+    padding: 15px;
+}
+
+.view-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background: none;
+    border: 1px solid var(--matrix-cyan);
+    color: var(--matrix-cyan);
+    cursor: pointer;
+}
+
+.hidden { display: none; }
+
+/* --- RESPONSIVENESS --- */
+
+/* Mobile & Tablet - Panel */
+@media (max-width: 768px) {
+    .side-panel {
+        width: 85%;
+        left: -90%;
+    }
+}
+
+/* TV & Wide screens - Results */
+@media (min-width: 1920px) {
+    .product-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+/* --- NEW ELEMENT: 16:9 LANDSCAPE SLIDER --- */
+
+/* --- PREMIUM STACKED SLIDER --- */
+
+.stacked-slider-section {
+    width: 100%;
+    overflow: hidden;
+    padding: 0px 0; 
+    background: #ffffff; /* Clean White Background */
+}
+
+.stacked-viewport {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    perspective: 1500px; 
+    position: relative;
+    height: 600px; /* Adjusted to fit the cards perfectly */
+    display: flex;
+    align-items: center;
+}
+
+.stacked-track {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.stacked-slide {
+    position: absolute;
+    width: 65%;
+    max-width: 750px;
+    aspect-ratio: 16 / 8;
+    transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border-radius: 16px;
+    list-style: none;
+    user-select: none;
+}
+
+/* Card Styling with Premium Gradients & Shadows */
+.slide-card-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    padding: 40px;
+    position: relative;
+    /* Soft elevation shadow */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+/* Backgrounds for each slide (Apply in HTML or here) */
+.stacked-slide:nth-child(1) .slide-card-inner {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); /* Light Grey/Silver */
+}
+.stacked-slide:nth-child(2) .slide-card-inner {
+    background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%); /* Deep Charcoal */
+}
+.stacked-slide:nth-child(3) .slide-card-inner {
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); /* Off-White/Pearl */
+}
+
+/* --- THE STACK LOGIC --- */
+
+/* Active Slide: Front and Center */
+.stacked-slide.active {
+    transform: translate3d(0, 0, 100px) scale(0.8);
+    z-index: 10;
+    opacity: 1;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Side Slides: Pushed back and desaturated */
+.stacked-slide.prev {
+    transform: translate3d(-30%, 0, -120px) scale(0.85);
+    z-index: 5;
+    opacity: 0.6;
+    filter: grayscale(20%);
+}
+
+.stacked-slide.next {
+    transform: translate3d(30%, 0, -120px) scale(0.85);
+    z-index: 5;
+    opacity: 0.6;
+    filter: grayscale(20%);
+}
+
+.stacked-slide.hidden {
+    transform: translate3d(0, 0, -300px) scale(0.7);
+    opacity: 0;
+    z-index: 1;
+}
+
+/* Text & Button Styling */
+.slide-text h3 {
+    font-size: 1.8rem;
+    color: #1a1a1a;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* Dark slide text color override */
+.stacked-slide:nth-child(2) .slide-text h3 {
+    color: #ffffff;
+}
+
+.create-btn {
+    padding: 12px 30px;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.create-btn:hover {
+    background: var(--matrix-cyan); /* Uses your Gold/Amber accent */
+    transform: translateY(-2px);
+}
+
+/* --- MOBILE OPTIMIZATION --- */
+@media (max-width: 600px) {
+    .stacked-viewport { height: 300px; }
+    .stacked-slide { width: 85%; }
+    .stacked-slide.prev { transform: translate3d(-15%, 0, -100px) scale(0.8); }
+    .stacked-slide.next { transform: translate3d(15%, 0, -100px) scale(0.8); }
+}
+
+/* --- Slim Slider Styles --- */
+/* --- UPDATED SLIM SLIDER --- */
+
+.slider-wrapper {
+    width: 100%;
+    padding: 20px 0;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.panel-label {
+    padding-left: 5%;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.slim-slider {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 10px 5% 20px 5%; /* Bottom padding for scrollbar space */
+    scroll-snap-type: x mandatory;
+    /* Custom Scrollbar for Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--matrix-cyan) #eee;
+}
+
+/* --- CUSTOM SCROLLBAR (Chrome, Safari, Edge, TV) --- */
+.slim-slider::-webkit-scrollbar {
+    height: 4px; /* Thin scrollbar */
+    display: block; /* Ensure it is visible */
+}
+
+.slim-slider::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+    margin: 0 5%; /* Match the padding of the slider */
+}
+
+.slim-slider::-webkit-scrollbar-thumb {
+    background: var(--matrix-cyan); 
+    border-radius: 10px;
+}
+
+/* --- CARD STYLING --- */
+
+.slider-card {
+    flex: 0 0 42%; /* Default Mobile: Shows 2 cards + bit of 3rd */
+    scroll-snap-align: start;
+    background: #fff;
+    border: 1px solid var(--matrix-border);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Card Image box - Fixed to 4:3 Ratio */
+.slider-card .card-image-box {
+    width: 100%;
+    aspect-ratio: 4 / 3; /* Wider, shorter cards */
+    background: #f8f9fa;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px 10px 0 0;
+}
+
+.slider-card .card-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slider-card .card-details {
+    padding: 10px;
+}
+
+.slider-card h3 {
+    font-size: 0.85rem; /* Smaller text for smaller cards */
+    color: var(--text-main);
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.slider-card .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--matrix-border);
+}
+
+.price-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--matrix-cyan);
+}
+
+/* --- RESPONSIVE PEEKING LOGIC --- */
+
+/* Desktop (Monitor/TV) */
+@media (min-width: 1025px) {
+    .slider-card {
+        flex: 0 0 calc(20% - 12px); /* Shows 5 cards */
+    }
+}
+
+/* Tablet */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .slider-card {
+        flex: 0 0 30%; /* Shows 3.3 cards */
+    }
+}
+
+/* Mobile (Small Screens) */
+@media (max-width: 600px) {
+    .slider-card {
+        flex: 0 0 44%; /* Shows exactly 2 cards and 3rd one starts to peek */
+    }
+    
+    .slider-card h3 {
+        font-size: 0.8rem;
+    }
+}
+
+/* ---  main card SECTION SETUP --- */
+.store-wrapper {
+    position: relative;
+    padding: 20px 0;
+    background: #ffffff;
+}
+
+/* --- THE GRID: 2 CARDS ON MOBILE --- */
+/* --- NON-STICKY VIEW ALL BUTTON --- */
+.store-grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 15px;
+    max-height: 600px; /* Limited height */
+    overflow: hidden;
+    transition: max-height 0.8s ease;
+    position: relative;
+}
+.section-header {
+    text-align: center; /* Centers the H3 and P tags */
+    width: 100%;        /* Ensures it takes the full width to find the center */
+    padding: 0px 0;    /* Adds some space around the text */
+}
+
+.section-header h3 {
+    margin-bottom: 8px; /* Space between title and subtitle */
+}
+
+/* EXPANDED STATE: Fits to content */
+.store-wrapper.is-expanded .store-grid-container {
+    max-height: 5000px; 
+}
+
+/* --- THE STICKY CLOSE BUTTON --- */
+.sticky-close-btn {
+    display: none; /* Hidden by default */
+    position: sticky;
+    top: 160px; /* ADJUST THIS: Should be your Navbar height */
+    z-index: 100;
+    width: 92%;
+    margin: 0 auto 15px auto;
+    background: #1a1a1a;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.store-wrapper.is-expanded .sticky-close-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+/* --- THE VIEW ALL PILL (Always visible at bottom of 520px) --- */
+.view-all-pill {
+    position: relative; /* Changed from sticky to relative */
+    display: block;
+    margin: 20px auto; /* Normal spacing at the bottom */
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.store-wrapper.is-expanded .view-all-pill {
+    display: none; /* Hide when open */
+}
+
+/* --- CARD STYLE --- */
+.store-card {
+    text-decoration: none;
+    background: #f9f9f9;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+.store-card img {
+    width: 100%;
+    aspect-ratio: 1/1; /* STAYS SQUARE */
+    object-fit: cover;
+}
+.store-card span {
+    display: block;
+    padding: 10px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #111;
+}
+
+/* --- Category Section --- */
+.section-container {
+    padding: 20px 5%;
+    width: 100%;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    width: 100%;
+}
+
+.category-card {
+    background: #fff;
+    border: 1px solid var(--matrix-border);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    width: 100%;
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--matrix-cyan);
+    box-shadow: 0 15px 40px rgba(255, 184, 0, 0.1);
+}
+
+.card-image-box {
+    position: relative;
+    width: 100%;
+    /* Default aspect ratio for Desktop/Tablet */
+    aspect-ratio: 16 / 10; 
+    overflow: hidden;
+    background: #eee;
+}
+
+.card-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s;
+}
+
+.category-card:hover .card-image-box img {
+    transform: scale(1.1);
+}
+
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.card-overlay span {
+    padding: 8px 20px;
+    border: 1px solid #1a1a1a;
+    color: #1a1a1a;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: #fff;
+}
+
+.category-card:hover .card-overlay {
+    opacity: 1;
+}
+
+.card-details {
+    padding: 20px;
+}
+
+.card-details h3 {
+    font-size: 1.25rem;
+    margin-bottom: 5px;
+    color: #1a1a1a;
+}
+
+.card-details p {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--matrix-border);
+    padding-top: 15px;
+}
+
+.price-tag {
+    color: var(--matrix-cyan);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.card-footer i {
+    color: #aaa;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.category-card:hover .card-footer i {
+    transform: translateX(5px);
+    color: var(--matrix-cyan);
+}
+
+/* --- Responsive Adjustments --- */
+
+/* Mobile (Up to 600px) */
+@media (max-width: 600px) {
+    .category-grid {
+        grid-template-columns: 1fr; /* Full width card */
+        gap: 20px;
+    }
+    
+    .card-image-box {
+        aspect-ratio: 4 / 3; /* Specific 4:3 Ratio for Mobile */
+    }
+
+    .card-details h3 { 
+        font-size: 1.1rem; 
+    }
+    
+    .section-container {
+        padding: 15px; /* Tighter padding for mobile screens */
+    }
+}
+
+/* TV & Ultra Wide Screens */
+@media (min-width: 1920px) {
+    .category-card { 
+        border-radius: 20px; 
+    }
+    .card-details h3 { 
+        font-size: 1.8rem; 
+    }
+    .category-grid {
+        gap: 40px;
+    }
+}
