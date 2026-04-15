@@ -7,10 +7,30 @@ const loginForm = document.getElementById('masterLoginForm');
 const errorMsg = document.getElementById('errorMsg');
 const loginBtn = document.getElementById('loginBtn');
 
+/**
+ * 1. AUTO-LOGIN CHECK (Runs immediately on page load)
+ * This checks LocalStorage to see if you previously logged in.
+ */
+window.addEventListener('DOMContentLoaded', () => {
+    const isAuth = localStorage.getItem('is_admin_auth');
+    
+    if (isAuth === 'true') {
+        console.log("Admin session detected. Access granted.");
+        // Hide login box and show the dashboard
+        if (loginOverlay) loginOverlay.classList.add('dashboard-hidden');
+        if (mainDashboard) mainDashboard.classList.remove('dashboard-hidden');
+        
+        // Tell other scripts (like order-monitor.js) that it's safe to load data
+        window.dispatchEvent(new CustomEvent('authSuccess'));
+    }
+});
+
+/**
+ * 2. LOGIN FORM SUBMISSION
+ */
 loginForm.onsubmit = async (e) => {
     e.preventDefault();
     
-    // Disable button to prevent double-clicks
     loginBtn.disabled = true;
     loginBtn.innerText = "Verifying...";
     errorMsg.style.display = 'none';
@@ -27,12 +47,14 @@ loginForm.onsubmit = async (e) => {
             
             // Compare input with Firestore data
             if (inputId === data.adminId && inputPw === data.password) {
+                // Success: Hide login, show dashboard
                 loginOverlay.classList.add('dashboard-hidden');
                 mainDashboard.classList.remove('dashboard-hidden');
                 
-                // Save a temporary session flag (optional)
-                sessionStorage.setItem('is_admin_auth', 'true');
+                // SAVE TO LOCAL STORAGE (Stay logged in forever until Logout is clicked)
+                localStorage.setItem('is_admin_auth', 'true');
                 
+                // Trigger data loading
                 window.dispatchEvent(new CustomEvent('authSuccess'));
             } else {
                 showError("Invalid ID or Password.");
@@ -49,12 +71,23 @@ loginForm.onsubmit = async (e) => {
     }
 };
 
+/**
+ * 3. ERROR HELPER
+ */
 function showError(msg) {
     errorMsg.innerText = msg;
     errorMsg.style.display = 'block';
 }
 
-document.getElementById('logoutBtn').onclick = () => {
-    sessionStorage.removeItem('is_admin_auth');
-    location.reload();
-};
+/**
+ * 4. LOGOUT LOGIC
+ */
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.onclick = () => {
+        // Remove the permanent flag
+        localStorage.removeItem('is_admin_auth');
+        // Reload to show the login screen again
+        location.reload();
+    };
+}
