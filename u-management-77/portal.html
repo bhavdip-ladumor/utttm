@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UttamHub | Management Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/portal-style.css">
+</head>
+<body class="admin-body">
+
+  <div id="loginOverlay" class="auth-container">
+    <div class="login-box">
+        <header class="login-header">
+            <h1 class="admin-brand">UTTAM<span>HUB</span></h1>
+            <div class="portal-badge">STORE OWNER ACCESS</div>
+        </header>
+
+        <form id="ownerLoginForm">
+            <div class="input-group">
+                <i class="fa fa-user-tie"></i>
+                <input type="text" id="ownerId" placeholder="Owner ID (e.g., resin-owner)" required>
+            </div>
+            <div class="input-group">
+                <i class="fa fa-key"></i>
+                <input type="password" id="ownerCode" placeholder="Access Code" required>
+            </div>
+            <button type="submit" id="loginBtn">Enter Dashboard</button>
+            <p id="errorMsg" class="error-msg">Incorrect ID or Code. Access Denied.</p>
+        </form>
+    </div>
+</div>
+
+<div id="mainDashboard" class="dashboard-hidden">
+    <header class="dashboard-header">
+        <div class="header-main">
+            <div class="header-left">
+                <h1 class="admin-brand-small"><span id="storeNameDisplay">Store</span><span>HUB</span></h1>
+                <div class="role-tag">STORE OWNER</div>
+            </div>
+            <div class="header-right">
+                <div class="status-indicator"><i class="fa fa-circle"></i> LIVE FEED</div>
+                <button id="logoutBtn" class="logout-pill"><i class="fa fa-power-off"></i></button>
+            </div>
+        </div>
+    </header>
+
+<main class="dashboard-content">
+    <div class="content-header">
+        <h2>Live Orders: <span id="storeTitle">Store</span></h2>
+        <div class="status-legend">
+            <span class="dot pending"></span> New 
+            <span class="dot processing"></span> Accepted 
+            <span class="dot done"></span> Completed
+        </div>
+    </div>
+
+    <div id="orderGrid" class="order-grid">
+        </div>
+</main>
+</div>
+
+    <script type="module" src="js/portal-logic.js"></script>
+    <script type="module" src="js/login-manager.js"></script>
+</body>
+</html>

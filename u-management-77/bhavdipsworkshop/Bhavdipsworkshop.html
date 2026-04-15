@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uttamhub | Master Admin</title>
+    <link rel="stylesheet" href="Bhavdipsworkshop.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+</head>
+<body class="admin-body">
+
+    <div id="loginOverlay" class="auth-container">
+        <div class="login-box">
+            <h1 class="admin-brand">UTTAM<span>HUB</span></h1>
+            <form id="masterLoginForm">
+                <div class="input-group">
+                    <input type="text" id="adminId" placeholder="Admin ID" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="adminPw" placeholder="Password" required>
+                </div>
+                <button type="submit" id="loginBtn">Login</button>
+                <p id="errorMsg" class="error-msg"></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="mainDashboard" class="dashboard-hidden">
+        
+        <nav id="sideMenu" class="side-menu">
+            <button id="closeMenu" class="close-btn">&times;</button>
+            <div class="menu-content">
+                <h2 class="menu-title">UTTAM<span>HUB</span></h2>
+                <button class="menu-item active" onclick="showSection('overview')"><i class="fa fa-th-large"></i> Overview</button>
+                <button class="menu-item" onclick="openFullDiv('ordersDiv')"><i class="fa fa-shopping-bag"></i> All Orders</button>
+                
+                <p class="menu-label">Stores</p>
+                <div id="storeSelectList" class="selectable-list"></div>
+                
+                <p class="menu-label">Services</p>
+                <div id="serviceSelectList" class="selectable-list"></div>
+            </div>
+        </nav>
+
+        <header class="dashboard-header">
+            <button id="menuBtn" class="icon-btn"><i class="fa fa-bars"></i></button>
+            <h1 class="logo">UTTAM<span>HUB</span></h1>
+            <button id="logoutBtn" class="logout-pill">Logout</button>
+        </header>
+
+        <main id="mainView" class="overview-section">
+            <div class="row-container">
+                <div class="row-header">
+                    <h3>All Stores</h3>
+                    <button onclick="openFullDiv('storesDiv')">See All</button>
+                </div>
+                <div class="scroll-row" id="storeRow"></div>
+            </div>
+
+            <div class="row-container">
+                <div class="row-header">
+                    <h3>All Services</h3>
+                    <button onclick="openFullDiv('servicesDiv')">See All</button>
+                </div>
+                <div class="scroll-row" id="serviceRow"></div>
+            </div>
+        </main>
+
+        <div id="fullPageOverlay" class="full-overlay hidden">
+            <div class="overlay-header">
+                <button class="close-overlay" onclick="closeFullDiv()"><i class="fa fa-arrow-left"></i> Back</button>
+                <h2 id="overlayTitle">View</h2>
+            </div>
+            <div id="overlayContent" class="overlay-inner"></div>
+        </div>
+    </div>
+
+    <template id="orderTemplate">
+        <div class="order-card">
+            <div class="card-header"><span class="order-id-label"></span></div>
+            <div class="customer-info">
+                <span class="cust-name"></span> | <span class="cust-phone"></span>
+                <div class="cust-addr"></div> </div>            
+            </div>
+            <div class="store-buckets-container"></div>
+            <div class="grand-total"></div>
+        </div>
+    </template>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker Registered!', reg))
+        .catch(err => console.log('Service Worker Failed:', err));
+    });
+  }
+</script>
+
+    <script type="module" src="auth-manager.js"></script>
+    <script type="module" src="ui-controller.js"></script>
+    <script type="module" src="order-monitor.js"></script>
+</body>
+</html>
