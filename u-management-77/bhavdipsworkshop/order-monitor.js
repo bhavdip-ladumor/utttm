@@ -132,3 +132,17 @@ function triggerNotification(orderData) {
         });
     }
 }
+
+document.getElementById('enableNotifications').onclick = () => {
+    if (!("Notification" in window)) {
+        alert("This browser does not support desktop notifications");
+    } else {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                alert("Notifications Enabled! You will now hear a ping for new orders.");
+                // Test sound
+                new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play();
+            }
+        });
+    }
+};
