@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage -->
   <url>
     <loc>https://uttamhub.com/</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-06-26</lastmod>
     <priority>1.0</priority>
+  </url>
+  
+  <!-- Resin Cosmos Brand -->
+  <url>
+    <loc>https://uttamhub.com/setbrand/resin/resincosmos.html</loc>
+    <lastmod>2026-06-26</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Wooden Beyond Brand -->
+  <url>
+    <loc>https://uttamhub.com/setbrand/woodenbeyond/woodenbeyond.html</loc>
+    <lastmod>2026-06-26</lastmod>
+    <priority>0.8</priority>
   </url>
 </urlset>
